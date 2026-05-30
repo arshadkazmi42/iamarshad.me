@@ -256,6 +256,41 @@
   }
   .meta-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
 
+  /* Hero spectrum: tiny chromatic signature of the live apps.
+     Reads as decoration, not a product list. Hover a dot to see the app name. */
+  .hero-spectrum {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin: 4px auto 22px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+    animation: fadeUp 0.8s 0.22s ease-out both;
+  }
+  .hero-spectrum .dots {
+    display: inline-flex; gap: 5px;
+  }
+  .hero-spectrum .dots a {
+    --pc: var(--text);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pc);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--pc) 70%, transparent);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .hero-spectrum .dots a:hover {
+    transform: scale(1.6);
+    box-shadow: 0 0 12px var(--pc);
+  }
+  .hero-spectrum .more {
+    color: var(--muted);
+    border-bottom: 1px dashed rgba(255,255,255,0.2);
+    padding-bottom: 1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hero-spectrum .more:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
+
   .hero-socials {
     display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
     animation: fadeUp 0.8s 0.32s ease-out both;
@@ -761,6 +796,20 @@
     <p class="hero-sub">
       I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
     </p>
+
+    <!-- Chromatic spectrum: visual signature of the live apps.
+         Each dot is the app's brand color, clickable, named on hover. -->
+    <div class="hero-spectrum">
+      <span class="dots">
+        <% live_apps.each do |app| %>
+          <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+             style="--pc: <%= app[:color] %>;"
+             aria-label="<%= app[:name] %><%= app[:tld] %>"
+             title="<%= app[:name] %><%= app[:tld] %> — <%= app[:tag] %>"></a>
+        <% end %>
+      </span>
+      <a href="#shipping" class="more"><%= live_apps.length %> apps shipping →</a>
+    </div>
 
     <div class="hero-meta">
       <span class="meta-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
