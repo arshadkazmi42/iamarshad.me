@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#0a0a0f]">
+  <head>
+    <meta charset="utf-8">
+    <title><%= content_for?(:title) ? yield(:title) : "Arshad Kazmi — indie hacker · bug bounty hunter · software engineer" %></title>
+
+    <!-- SEO -->
+    <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : 'Arshad Kazmi (@arshadkazmi42) — builder of the i*.today suite (iScan, iSpy, iSsl, iLink, GhRev, iBlockBots), bug bounty hunter as @codermak on HackerOne/Bugcrowd/Intigriti/YesWeHack, and software engineer based in Berlin.' %>">
+    <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : 'Arshad Kazmi, arshadkazmi42, codermak, indie hacker, bug bounty hunter, software engineer Berlin, iScan, iSpy, iSsl, iLink, GhRev, iBlockBots, SaaS founder, security researcher' %>">
+    <meta name="author" content="Arshad Kazmi">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#0a0a0f">
+    <link rel="canonical" href="https://iamarshad.me<%= request.path %>">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <meta name="turbo-cache-control" content="no-cache">
+    <%= favicon_link_tag 'favicon.png' %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Arshad Kazmi — indie hacker · bug bounty hunter · software engineer">
+    <meta property="og:description" content="Builder of the i*.today suite. Bug bounty hunter as @codermak. Software engineer in Berlin.">
+    <meta property="og:url" content="https://iamarshad.me<%= request.path %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="iamarshad.me">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="<%= image_url('og.png') %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Arshad Kazmi — iamarshad.me">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@arshadkazmi42">
+    <meta name="twitter:creator" content="@arshadkazmi42">
+    <meta name="twitter:title" content="Arshad Kazmi — indie hacker · bug bounty hunter · software engineer">
+    <meta name="twitter:description" content="Builder of the i*.today suite. Bug bounty hunter as @codermak. Software engineer in Berlin.">
+    <meta name="twitter:image" content="<%= image_url('og.png') %>">
+    <meta name="twitter:image:alt" content="Arshad Kazmi — iamarshad.me">
+    <meta property="twitter:domain" content="iamarshad.me">
+    <meta property="twitter:url" content="https://iamarshad.me<%= request.path %>">
+  </head>
+
+  <body class="h-full bg-[#0a0a0f]">
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+/*
+ *= require_tree .
+ *= require_self
+ */
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+* {
+  font-family: "Lexend", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.font-light    { font-weight: 300; }
+.font-normal   { font-weight: 400; }
+.font-medium   { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold     { font-weight: 700; }
+.font-black,
+.font-extrabold { font-weight: 900; }
+
+/* JetBrains Mono for anything in <code> / .font-mono */
+code, kbd, samp, .font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}
+
+/* ─── App cards: hover state + glow orb driven by --glow CSS var ──────── */
+/* The card stores its accent color as `--glow` (set inline per card).    */
+/* All hover/glow effects derive from that single source of truth, which  */
+/* lets the ERB template stay data-driven without fighting Tailwind's JIT.*/
+
+.iam-app-card {
+  transition: border-color 250ms ease, background-color 250ms ease;
+}
+.iam-app-card:hover {
+  border-color: color-mix(in srgb, var(--glow) 40%, transparent);
+}
+
+.iam-app-orb {
+  background-color: color-mix(in srgb, var(--glow) 10%, transparent);
+}
+.iam-app-card:hover .iam-app-orb {
+  background-color: color-mix(in srgb, var(--glow) 25%, transparent);
+}
+
+.iam-app-icon {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--glow) 90%, transparent),
+    color-mix(in srgb, var(--glow) 45%, transparent));
+  box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--glow) 30%, transparent);
+}
+
+/* ─── Hero terminal: line-by-line reveal + blinking cursor ───────────── */
+/* 16s loop; each line fades in at its own offset, then holds. */
+
+.iam-term-line { opacity: 0; }
+
+@mixin term-reveal($name, $start) {
+  @keyframes #{$name} {
+    0%, #{$start * 1%} { opacity: 0; transform: translateY(4px); }
+    #{($start + 2) * 1%}, 100% { opacity: 1; transform: translateY(0); }
+  }
+  .iam-term-#{$name} { animation: #{$name} 16s infinite ease-out; }
+}
+
+@include term-reveal(l1, 0);
+@include term-reveal(l2, 6);
+@include term-reveal(l3, 14);
+@include term-reveal(l4, 20);
+@include term-reveal(l5, 34);
+@include term-reveal(l6, 42);
+@include term-reveal(l7, 58);
+
+/* Blinking cursor — kicks in only after the final line appears */
+@keyframes iam-cursor-blink {
+  0%, 60%       { opacity: 0; }
+  62%, 70%      { opacity: 1; }
+  72%, 80%      { opacity: 0; }
+  82%, 90%      { opacity: 1; }
+  92%, 100%     { opacity: 0; }
+}
+.iam-term-cursor { animation: iam-cursor-blink 16s infinite step-end; }
+
+/* Respect prefers-reduced-motion: skip the reveal, show everything */
+@media (prefers-reduced-motion: reduce) {
+  .iam-term-line { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .iam-term-cursor { animation: none !important; opacity: 1 !important; }
+}
