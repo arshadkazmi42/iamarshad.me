@@ -734,6 +734,31 @@
     </div>
   </section>
 
+  <!-- ───────────────────────── SHIPPING ──────────────────────── -->
+  <!-- Surfaced immediately below the hero — "what I make" is the headline value of the site. -->
+  <section id="shipping" class="section reveal" style="padding-top: 60px;">
+    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects</div>
+    <h2>Things I've shipped.</h2>
+    <p class="section-sub">Small, focused, mostly built for hackers and indie founders.</p>
+
+    <div class="ship-grid">
+      <% shipping.each do |app| %>
+        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+           class="ship-card" style="--pc: <%= app[:color] %>;">
+          <div class="ship-card-top">
+            <span class="badge-live"><span class="ld"></span> Live</span>
+            <span class="ship-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+            </span>
+          </div>
+          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+          <div class="ship-card-tag"><%= app[:tag] %></div>
+          <p class="ship-card-blurb"><%= app[:blurb] %></p>
+        </a>
+      <% end %>
+    </div>
+  </section>
+
   <!-- ───────────────────── MARQUEE STATS ────────────────────── -->
   <!-- All numbers fetched live from GitHub at page load (see <script> at bottom). -->
   <!-- App count is auto-derived from the `shipping` array so it updates with the data. -->
@@ -787,30 +812,6 @@
           <div class="desc">Building the platform that powers paid social for the world's biggest brands. Berlin office, distributed team.</div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ───────────────────────── SHIPPING ──────────────────────── -->
-  <section id="shipping" class="section reveal">
-    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects</div>
-    <h2>Things I've shipped.</h2>
-    <p class="section-sub">Small, focused, mostly built for hackers and indie founders.</p>
-
-    <div class="ship-grid">
-      <% shipping.each do |app| %>
-        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="ship-card" style="--pc: <%= app[:color] %>;">
-          <div class="ship-card-top">
-            <span class="badge-live"><span class="ld"></span> Live</span>
-            <span class="ship-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-            </span>
-          </div>
-          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="ship-card-tag"><%= app[:tag] %></div>
-          <p class="ship-card-blurb"><%= app[:blurb] %></p>
-        </a>
-      <% end %>
     </div>
   </section>
 
