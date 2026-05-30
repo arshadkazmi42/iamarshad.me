@@ -6,17 +6,27 @@
   # ─── DATA ─────────────────────────────────────────────────────────────
   # Each app has its own brand color (`color`) used for the card's ambient glow + bottom accent.
   # `tag` is the one-word category that sits between the name and the longer blurb.
+  # `status` is :live (currently shipping) or :closed (retired — the app no longer runs).
+  # Closed apps stay in the portfolio to show honest history — the cards are non-clickable.
   shipping = [
+    # ── live ───────────────────────────────────────────────────────────
     { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff", blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
     { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee", blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
     { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d", blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
     { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399", blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
     { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def", blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
     { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185", blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
-    { name: "iMrr",       tld: ".today", url: "https://imrr.today",       tag: "MRR leaderboard",   color: "#a78bfa", blurb: "Free MRR leaderboard for indie SaaS and small businesses. Submit your MRR; see where you rank.",       status: :live },
-    { name: "iWebhook",   tld: ".today", url: "https://iwebhook.today",   tag: "Webhook mocker",    color: "#f97316", blurb: "Mock and test payment webhooks in seconds — locally or against a public URL.",                          status: :live },
     { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6", blurb: "Paste any GitHub access token and instantly see exactly what it unlocks.",                              status: :live },
+
+    # ── closed / retired ───────────────────────────────────────────────
+    { name: "iMrr",       tld: ".today", url: nil, tag: "MRR leaderboard",    color: "#a78bfa", blurb: "Free MRR leaderboard for indie SaaS and small businesses. Ran for a year before retiring it.",         status: :closed },
+    { name: "iWebhook",   tld: ".today", url: nil, tag: "Webhook mocker",     color: "#f97316", blurb: "Mock and test payment webhooks in seconds — locally or against a public URL.",                          status: :closed },
+    { name: "iFindIdea",  tld: ".today", url: nil, tag: "Idea engine",        color: "#fbbf24", blurb: "An idea engine that turned your X feed into indie-app ideas via your own AI key.",                       status: :closed },
+    { name: "iPing",      tld: ".today", url: nil, tag: "Order alerts",       color: "#06b6d4", blurb: "Instant order notifications for small online stores.",                                                    status: :closed },
+    { name: "iBarter",    tld: ".today", url: nil, tag: "Indie community",    color: "#ec4899", blurb: "A community for indie hackers — collaboration over isolation.",                                           status: :closed },
   ]
+  live_apps   = shipping.select { |a| a[:status] == :live }
+  closed_apps = shipping.select { |a| a[:status] == :closed }
 
   # OSS — stars fetched live from GitHub API at page load (see <script> at bottom).
   # `repo` = "owner/name" used for both the link and the live-stars lookup.
@@ -411,19 +421,48 @@
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 14px;
   }
-  .ship-card .badge-live {
+  .ship-card .badge-live,
+  .ship-card .badge-closed {
     font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 3px 8px; border-radius: 999px;
     display: inline-flex; align-items: center; gap: 5px;
+  }
+  .ship-card .badge-live {
     color: var(--green);
     background: rgba(52, 211, 153, 0.08);
     border: 1px solid rgba(52, 211, 153, 0.2);
+  }
+  .ship-card .badge-closed {
+    color: rgba(235, 231, 245, 0.5);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   .ship-card .badge-live .ld {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--green); box-shadow: 0 0 7px var(--green);
     animation: pulseDot 2s infinite;
   }
+  .ship-card .badge-closed .ld {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(235, 231, 245, 0.4);
+  }
+
+  /* Closed cards: muted, non-interactive, no lift on hover */
+  .ship-card.is-closed {
+    opacity: 0.62; cursor: default;
+  }
+  .ship-card.is-closed:hover {
+    border-color: var(--line);
+    transform: none;
+    box-shadow: none;
+    opacity: 0.78;
+  }
+  .ship-card.is-closed::before { opacity: 0.04; }
+  .ship-card.is-closed:hover::before { opacity: 0.08; transform: none; }
+  .ship-card.is-closed::after { opacity: 0.15; }
+  .ship-card.is-closed:hover::after { opacity: 0.15; }
+  /* Hide the arrow on closed cards — no destination */
+  .ship-card.is-closed .ship-arrow { display: none; }
   .ship-card .ship-arrow {
     width: 24px; height: 24px; border-radius: 50%;
     display: grid; place-items: center;
@@ -754,9 +793,9 @@
     </p>
 
     <div class="hero-ships">
-      <span class="label"><span class="live-dot"></span> Currently shipping <%= shipping.length %> apps</span>
+      <span class="label"><span class="live-dot"></span> Currently shipping <%= live_apps.length %> apps</span>
       <div class="pills">
-        <% shipping.each do |app| %>
+        <% live_apps.each do |app| %>
           <a href="<%= app[:url] %>" target="_blank" rel="noopener"
              class="ship-pill" style="--pc: <%= app[:color] %>;"
              title="<%= app[:tag] %>">
@@ -796,18 +835,30 @@
 
     <div class="ship-grid">
       <% shipping.each do |app| %>
-        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="ship-card" style="--pc: <%= app[:color] %>;">
+        <% closed = app[:status] == :closed %>
+        <% tag    = closed ? :div : :a %>
+        <%= content_tag(tag,
+              {
+                class: "ship-card#{' is-closed' if closed}",
+                style: "--pc: #{app[:color]};",
+                href:   (app[:url] unless closed),
+                target: ('_blank' unless closed),
+                rel:    ('noopener' unless closed),
+              }.compact) do %>
           <div class="ship-card-top">
-            <span class="badge-live"><span class="ld"></span> Live</span>
-            <span class="ship-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-            </span>
+            <% if closed %>
+              <span class="badge-closed"><span class="ld"></span> Closed</span>
+            <% else %>
+              <span class="badge-live"><span class="ld"></span> Live</span>
+              <span class="ship-arrow">
+                <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+              </span>
+            <% end %>
           </div>
           <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
           <div class="ship-card-tag"><%= app[:tag] %></div>
           <p class="ship-card-blurb"><%= app[:blurb] %></p>
-        </a>
+        <% end %>
       <% end %>
     </div>
   </section>
@@ -819,7 +870,7 @@
     <div class="marquee">
       <%
         marquee_items = [
-          { num_html: shipping.length.to_s,                                                   label: "apps live in production" },
+          { num_html: live_apps.length.to_s,                                                  label: "apps live in production" },
           { num_html: '<span data-gh-stat="public_repos">—</span>',                           label: "public repos on GitHub" },
           { num_html: '<span data-gh-stat="followers">—</span>',                              label: "GitHub followers" },
           { num_html: '<span data-gh-stars-of="arshadkazmi42/first-issues">—</span>',         label: "stars on first-issues" },
