@@ -256,39 +256,37 @@
   }
   .meta-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
 
-  /* Hero spectrum: tiny chromatic signature of the live apps.
-     Reads as decoration, not a product list. Hover a dot to see the app name. */
-  .hero-spectrum {
-    display: inline-flex; align-items: center; gap: 10px;
-    margin: 4px auto 22px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted);
-    animation: fadeUp 0.8s 0.22s ease-out both;
+  /* Hero typewriter: rotates the second line of the H1 through the live apps.
+     "I ship [iScan|]" → types out, pauses, deletes, next app. Each app gets its
+     brand color. Driven by the inline <script> at the bottom of the page. */
+  .hero-h1-line2 {
+    display: block;
+    min-height: 1.1em;             /* prevent the line from collapsing while empty */
   }
-  .hero-spectrum .dots {
-    display: inline-flex; gap: 5px;
-  }
-  .hero-spectrum .dots a {
-    --pc: var(--text);
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--pc);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--pc) 70%, transparent);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: inline-block;
-  }
-  .hero-spectrum .dots a:hover {
-    transform: scale(1.6);
-    box-shadow: 0 0 12px var(--pc);
-  }
-  .hero-spectrum .more {
-    color: var(--muted);
-    border-bottom: 1px dashed rgba(255,255,255,0.2);
-    padding-bottom: 1px;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .hero-spectrum .more:hover {
+  .rot-app {
+    text-decoration: none;
+    transition: color 0.25s;
+    font-weight: 900;
     color: var(--text);
-    border-color: var(--text);
+    /* Soft glow that follows the brand color (set inline via JS as --pc) */
+    text-shadow: 0 0 36px color-mix(in srgb, var(--pc, transparent) 55%, transparent);
+    border-bottom: 2px solid color-mix(in srgb, var(--pc, transparent) 60%, transparent);
+    padding-bottom: 1px;
+  }
+  .rot-app:hover {
+    color: var(--pc, var(--text)) !important;
+  }
+  .rot-cursor {
+    display: inline-block;
+    width: 0.55em; height: 0.95em;
+    background: var(--text);
+    margin-left: 4px;
+    vertical-align: -8%;
+    animation: rot-blink 0.85s steps(2) infinite;
+  }
+  @keyframes rot-blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rot-cursor { animation: none; opacity: 0.8; }
   }
 
   .hero-socials {
@@ -791,25 +789,15 @@
     </div>
     <h1>
       Hi, I'm Arshad.<br>
-      I <span class="gr">ship, hunt</span> &amp; write code.
+      <span class="hero-h1-line2">
+        I <span class="gr">ship</span>
+        <a id="rotApp" class="rot-app" style="--pc: <%= live_apps.first[:color] %>; color: <%= live_apps.first[:color] %>;"
+           href="<%= live_apps.first[:url] %>" target="_blank" rel="noopener">iScan</a><span class="rot-cursor" aria-hidden="true"></span>
+      </span>
     </h1>
     <p class="hero-sub">
       I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
     </p>
-
-    <!-- Chromatic spectrum: visual signature of the live apps.
-         Each dot is the app's brand color, clickable, named on hover. -->
-    <div class="hero-spectrum">
-      <span class="dots">
-        <% live_apps.each do |app| %>
-          <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-             style="--pc: <%= app[:color] %>;"
-             aria-label="<%= app[:name] %><%= app[:tld] %>"
-             title="<%= app[:name] %><%= app[:tld] %> — <%= app[:tag] %>"></a>
-        <% end %>
-      </span>
-      <a href="#shipping" class="more"><%= live_apps.length %> apps shipping →</a>
-    </div>
 
     <div class="hero-meta">
       <span class="meta-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
@@ -1087,6 +1075,46 @@
         })
         .catch(function () { /* leave placeholder */ });
     });
+
+    // ── Hero typewriter: rotate the H1's second line through live apps ──
+    // Types each app name char-by-char, pauses while shown, deletes, advances.
+    // Honors prefers-reduced-motion: if set, just shows the first app statically.
+    (function () {
+      var el = document.getElementById('rotApp');
+      if (!el) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var APPS = <%= raw live_apps.map { |a| { n: a[:name], c: a[:color], u: a[:url] } }.to_json %>;
+      var TYPE = 80, DEL = 45, HOLD = 1800, PAUSE = 320;
+      var ai = 0, ci = APPS[0].n.length, typing = false;  /* start in delete mode so first app cycles out */
+      el.textContent = APPS[0].n;
+      el.style.setProperty('--pc', APPS[0].c);
+      el.style.color = APPS[0].c;
+      el.href = APPS[0].u;
+      setTimeout(step, HOLD);
+      function step() {
+        var app = APPS[ai];
+        if (typing) {
+          ci++;
+          el.textContent = app.n.substring(0, ci);
+          if (ci === app.n.length) { typing = false; setTimeout(step, HOLD); return; }
+          setTimeout(step, TYPE);
+        } else {
+          ci--;
+          el.textContent = app.n.substring(0, ci);
+          if (ci === 0) {
+            typing = true;
+            ai = (ai + 1) % APPS.length;
+            var next = APPS[ai];
+            el.style.setProperty('--pc', next.c);
+            el.style.color = next.c;
+            el.href = next.u;
+            setTimeout(step, PAUSE);
+            return;
+          }
+          setTimeout(step, DEL);
+        }
+      }
+    })();
 
     // ── Package download counts (PyPI / npm) via shields.io ────────────
     // shields.io is CORS-enabled. Endpoint: img.shields.io/<registry>/dm/<pkg>.json
