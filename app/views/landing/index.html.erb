@@ -1431,53 +1431,109 @@
       els.forEach(function (el) { io.observe(el); });
     }
 
-    // ── Live GitHub stats ─────────────────────────────────────────────
-    // Unauthenticated API: 60 req/hr per IP. We make at most 1 (user) + N (repos),
-    // and let stats stay as "—" if the API limit is exceeded or anything fails.
-    var GH_USER = "arshadkazmi42";
-    var fmt = function (n) {
-      if (typeof n !== "number") return "—";
+    // ── Live stats: cache + validate so we never render an error ──────
+    //
+    // Both shields.io and the GitHub public API will sometimes return
+    // garbage instead of a number (rate limits, "invalid", "unknown"…).
+    //
+    // Strategy:
+    //   1. Render cached value instantly on page load (no flash of "—")
+    //   2. Fetch fresh in the background
+    //   3. Validate it's a numeric value (digits, optional decimal, optional k/M/B suffix)
+    //   4. Only update the DOM if validation passed
+    //   5. Persist valid values to localStorage with a 12-hour TTL
+    //
+    // Net: stale-but-correct beats fresh-but-broken.
+    var CACHE_TTL = 12 * 60 * 60 * 1000;  // 12 hours
+    var NUM_RE    = /^\d+(\.\d+)?[kMBG]?$/i;  // "931k", "175", "1.2M", "327"
+
+    function readCache(key) {
+      try {
+        var raw = localStorage.getItem(key);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        if (!obj || obj.value === undefined) return null;
+        return obj;
+      } catch (e) { return null; }
+    }
+    function writeCache(key, value) {
+      try { localStorage.setItem(key, JSON.stringify({ value: value, ts: Date.now() })); } catch (e) {}
+    }
+    function setText(el, text) {
+      var inner = el.querySelector(".num") || el.querySelector(".big") || el.querySelector("span");
+      if (inner) inner.textContent = text;
+      else el.textContent = text;
+    }
+    function fmtNum(n) {
+      if (typeof n !== "number" || isNaN(n)) return null;
       if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "k";
       return n.toString();
-    };
+    }
 
-    // User-level stats (public_repos, followers)
-    fetch("https://api.github.com/users/" + GH_USER)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) {
-        if (!d) return;
-        document.querySelectorAll("[data-gh-stat]").forEach(function (el) {
-          var key = el.getAttribute("data-gh-stat");
-          if (typeof d[key] !== "undefined") el.textContent = fmt(d[key]);
-        });
-      })
-      .catch(function () { /* leave placeholder */ });
-
-    // Per-repo star counts (de-duped so we only hit each repo once)
-    var repos = new Set();
-    document.querySelectorAll("[data-gh-stars-of]").forEach(function (el) {
-      repos.add(el.getAttribute("data-gh-stars-of"));
-    });
-    repos.forEach(function (repo) {
-      fetch("https://api.github.com/repos/" + repo)
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-          if (!d || typeof d.stargazers_count !== "number") return;
-          var pretty = fmt(d.stargazers_count);
-          document.querySelectorAll('[data-gh-stars-of="' + repo + '"]').forEach(function (el) {
-            // .oss-stars renders a child <span>; the marquee renders the el itself.
-            var inner = el.querySelector("span");
-            if (inner) inner.textContent = pretty;
-            else el.textContent = pretty;
-          });
+    // Generic "cached live stat" wrapper.
+    function wireStat(key, fetcher, els) {
+      var cached = readCache(key);
+      if (cached) els.forEach(function (el) { setText(el, cached.value); });
+      if (cached && (Date.now() - cached.ts) < CACHE_TTL) return;  // still fresh; skip network
+      fetcher()
+        .then(function (value) {
+          if (!value || !NUM_RE.test(value)) return;  // ← drop errors, never render them
+          writeCache(key, value);
+          if (!cached || cached.value !== value) {
+            els.forEach(function (el) { setText(el, value); });
+          }
         })
-        .catch(function () { /* leave placeholder */ });
+        .catch(function () { /* keep cached, never render error */ });
+    }
+
+    var GH_USER = "arshadkazmi42";
+
+    // GitHub user-level (public_repos + followers — one request, multiple stats)
+    var userStatEls = {};
+    document.querySelectorAll("[data-gh-stat]").forEach(function (el) {
+      var key = el.getAttribute("data-gh-stat");
+      (userStatEls[key] = userStatEls[key] || []).push(el);
+    });
+    Object.keys(userStatEls).forEach(function (statKey) {
+      wireStat("gh-user:" + GH_USER + ":" + statKey, function () {
+        return fetch("https://api.github.com/users/" + GH_USER)
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) { return d ? fmtNum(d[statKey]) : null; });
+      }, userStatEls[statKey]);
+    });
+
+    // GitHub per-repo star counts (de-dupe by repo slug)
+    var repoEls = {};
+    document.querySelectorAll("[data-gh-stars-of]").forEach(function (el) {
+      var slug = el.getAttribute("data-gh-stars-of");
+      (repoEls[slug] = repoEls[slug] || []).push(el);
+    });
+    Object.keys(repoEls).forEach(function (repo) {
+      wireStat("gh-stars:" + repo, function () {
+        return fetch("https://api.github.com/repos/" + repo)
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) { return d ? fmtNum(d.stargazers_count) : null; });
+      }, repoEls[repo]);
+    });
+
+    // PyPI / npm downloads via shields.io (pre-formatted as "931k/month")
+    var downloadEls = {};
+    document.querySelectorAll("[data-downloads-of]").forEach(function (el) {
+      var slug = el.getAttribute("data-downloads-of");
+      (downloadEls[slug] = downloadEls[slug] || []).push(el);
+    });
+    Object.keys(downloadEls).forEach(function (slug) {
+      wireStat("dl:" + slug, function () {
+        return fetch("https://img.shields.io/" + slug.replace("/", "/dm/") + ".json")
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.message) return null;
+            return d.message.replace(/\/(month|week|day)$/i, "").trim();
+          });
+      }, downloadEls[slug]);
     });
 
     // ── Bento mouse-follow spotlight ──────────────────────────────────
-    // Each tile carries a radial-gradient overlay that follows the cursor
-    // (driven by --mx / --my CSS vars updated on mousemove). Skipped if
-    // prefers-reduced-motion is set.
     (function () {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       document.querySelectorAll('.bento-tile').forEach(function (tile) {
@@ -1488,24 +1544,5 @@
         });
       });
     })();
-
-    // ── Package download counts (PyPI / npm) via shields.io ────────────
-    // shields.io is CORS-enabled. Endpoint: img.shields.io/<registry>/dm/<pkg>.json
-    // Pre-formats the count (e.g. "931k/month"); we strip "/month" since the card
-    // already labels it "/mo".
-    document.querySelectorAll("[data-downloads-of]").forEach(function (el) {
-      var slug = el.getAttribute("data-downloads-of"); // e.g. "pypi/currency-symbols"
-      fetch("https://img.shields.io/" + slug.replace("/", "/dm/") + ".json")
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-          if (!d || !d.message) return;
-          var num = d.message.replace(/\/month$/i, "").trim();
-          // OSS card has a child .num; bento-package tile uses textContent directly.
-          var inner = el.querySelector(".num");
-          if (inner) inner.textContent = num;
-          else el.textContent = num;
-        })
-        .catch(function () { /* leave placeholder */ });
-    });
   });
 </script>
