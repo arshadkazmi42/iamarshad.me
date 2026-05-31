@@ -256,37 +256,74 @@
   }
   .meta-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
 
-  /* Hero typewriter: rotates the second line of the H1 through the live apps.
-     "I ship [iScan|]" → types out, pauses, deletes, next app. Each app gets its
-     brand color. Driven by the inline <script> at the bottom of the page. */
-  .hero-h1-line2 {
-    display: block;
-    min-height: 1.1em;             /* prevent the line from collapsing while empty */
+  /* ── Hero constellation: 7 app-colored planets orbiting the avatar ───
+     Each "planet" is a live app. Positions are computed in ERB (sin/cos
+     of i × 360/N). The whole orbit ring rotates continuously, but planets
+     are individually hoverable, scaling up with their brand-color glow. */
+  .hero-constellation {
+    position: relative;
+    width: 260px; height: 260px;
+    margin: 0 auto 22px;
+    animation: fadeUp 0.7s 0.0s ease-out both;
   }
-  .rot-app {
-    text-decoration: none;
-    transition: color 0.25s;
-    font-weight: 900;
-    color: var(--text);
-    /* Soft glow that follows the brand color (set inline via JS as --pc) */
-    text-shadow: 0 0 36px color-mix(in srgb, var(--pc, transparent) 55%, transparent);
-    border-bottom: 2px solid color-mix(in srgb, var(--pc, transparent) 60%, transparent);
-    padding-bottom: 1px;
+  .hero-constellation .hero-photo-wrap {
+    /* Override the centered/margin-auto wrap so it sits dead center of the constellation. */
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    z-index: 2;
   }
-  .rot-app:hover {
-    color: var(--pc, var(--text)) !important;
+  /* Soft gradient haze behind the orbits — adds depth without competing with the planets. */
+  .hero-constellation::before {
+    content: ""; position: absolute; inset: 16%;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #7c5cff22, #22d3ee22, #fb718522, #fbbf2422, #7c5cff22);
+    filter: blur(28px);
+    animation: spin 24s linear infinite;
+    pointer-events: none; z-index: 0;
   }
-  .rot-cursor {
-    display: inline-block;
-    width: 0.55em; height: 0.95em;
-    background: var(--text);
-    margin-left: 4px;
-    vertical-align: -8%;
-    animation: rot-blink 0.85s steps(2) infinite;
+  /* Faint dotted orbit path — hints at the circular motion */
+  .hero-constellation::after {
+    content: ""; position: absolute; inset: 20px;
+    border: 1px dashed rgba(255,255,255,0.07);
+    border-radius: 50%;
+    pointer-events: none; z-index: 0;
   }
-  @keyframes rot-blink { 50% { opacity: 0; } }
+  .planets-orbit {
+    position: absolute; inset: 0; z-index: 1;
+    animation: orbit-spin 38s linear infinite;
+    transform-origin: center;
+  }
+  .planet {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--pc);
+    box-shadow:
+      0 0 10px var(--pc),
+      0 0 24px color-mix(in srgb, var(--pc) 55%, transparent),
+      inset 0 0 0 1.5px rgba(10, 7, 16, 0.55);
+    transition: transform 0.25s ease, box-shadow 0.25s;
+    /* Counter-rotate so the planet's visual rotation cancels the orbit spin — keeps it visually still while orbiting. */
+    transform: rotate(0deg);
+  }
+  .planet:hover {
+    transform: scale(1.6);
+    box-shadow:
+      0 0 18px var(--pc),
+      0 0 40px var(--pc),
+      inset 0 0 0 1.5px rgba(10, 7, 16, 0.55);
+    z-index: 5;
+  }
+  @keyframes orbit-spin {
+    to { transform: rotate(360deg); }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .rot-cursor { animation: none; opacity: 0.8; }
+    .planets-orbit, .hero-constellation::before { animation: none; }
+  }
+  @media (max-width: 540px) {
+    .hero-constellation { width: 220px; height: 220px; }
   }
 
   .hero-socials {
@@ -780,20 +817,37 @@
 
   <!-- ─────────────────────────── HERO ────────────────────────── -->
   <section id="top" class="hero">
-    <div class="hero-photo-wrap">
-      <img class="hero-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="eager" decoding="async" width="96" height="96">
-      <span class="hero-photo-status" title="online · in Berlin"></span>
+    <%
+      # Pre-compute each planet's (x, y) offset from the constellation centre.
+      # `r` is the orbit radius; small bit of variance per index keeps the
+      # planets from feeling robotic.
+      r = 108
+    %>
+    <div class="hero-constellation" aria-label="7 live apps orbiting Arshad's avatar">
+      <div class="planets-orbit">
+        <% live_apps.each_with_index do |app, i| %>
+          <% angle_rad = ((360.0 / live_apps.length) * i - 90) * Math::PI / 180 %>
+          <% rr = r + (i.even? ? 0 : 4) %>
+          <% x = (Math.cos(angle_rad) * rr).round %>
+          <% y = (Math.sin(angle_rad) * rr).round %>
+          <a class="planet"
+             href="<%= app[:url] %>" target="_blank" rel="noopener"
+             title="<%= app[:name] %><%= app[:tld] %> — <%= app[:tag] %>"
+             aria-label="<%= app[:name] %><%= app[:tld] %>: <%= app[:tag] %>"
+             style="--pc: <%= app[:color] %>; left: calc(50% + <%= x %>px - 8px); top: calc(50% + <%= y %>px - 8px);"></a>
+        <% end %>
+      </div>
+      <div class="hero-photo-wrap">
+        <img class="hero-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="eager" decoding="async" width="96" height="96">
+        <span class="hero-photo-status" title="online · in Berlin"></span>
+      </div>
     </div>
     <div class="hero-eyebrow">
       <span class="dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--glow4); box-shadow: 0 0 8px var(--glow4); animation: pulseDot 2s infinite ease-in-out;"></span> Berlin · Built solo
     </div>
     <h1>
       Hi, I'm Arshad.<br>
-      <span class="hero-h1-line2">
-        I <span class="gr">ship</span>
-        <a id="rotApp" class="rot-app" style="--pc: <%= live_apps.first[:color] %>; color: <%= live_apps.first[:color] %>;"
-           href="<%= live_apps.first[:url] %>" target="_blank" rel="noopener">iScan</a><span class="rot-cursor" aria-hidden="true"></span>
-      </span>
+      I <span class="gr">ship, hunt</span> &amp; write code.
     </h1>
     <p class="hero-sub">
       I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
@@ -1075,46 +1129,6 @@
         })
         .catch(function () { /* leave placeholder */ });
     });
-
-    // ── Hero typewriter: rotate the H1's second line through live apps ──
-    // Types each app name char-by-char, pauses while shown, deletes, advances.
-    // Honors prefers-reduced-motion: if set, just shows the first app statically.
-    (function () {
-      var el = document.getElementById('rotApp');
-      if (!el) return;
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var APPS = <%= raw live_apps.map { |a| { n: a[:name], c: a[:color], u: a[:url] } }.to_json %>;
-      var TYPE = 80, DEL = 45, HOLD = 1800, PAUSE = 320;
-      var ai = 0, ci = APPS[0].n.length, typing = false;  /* start in delete mode so first app cycles out */
-      el.textContent = APPS[0].n;
-      el.style.setProperty('--pc', APPS[0].c);
-      el.style.color = APPS[0].c;
-      el.href = APPS[0].u;
-      setTimeout(step, HOLD);
-      function step() {
-        var app = APPS[ai];
-        if (typing) {
-          ci++;
-          el.textContent = app.n.substring(0, ci);
-          if (ci === app.n.length) { typing = false; setTimeout(step, HOLD); return; }
-          setTimeout(step, TYPE);
-        } else {
-          ci--;
-          el.textContent = app.n.substring(0, ci);
-          if (ci === 0) {
-            typing = true;
-            ai = (ai + 1) % APPS.length;
-            var next = APPS[ai];
-            el.style.setProperty('--pc', next.c);
-            el.style.color = next.c;
-            el.href = next.u;
-            setTimeout(step, PAUSE);
-            return;
-          }
-          setTimeout(step, DEL);
-        }
-      }
-    })();
 
     // ── Package download counts (PyPI / npm) via shields.io ────────────
     // shields.io is CORS-enabled. Endpoint: img.shields.io/<registry>/dm/<pkg>.json
