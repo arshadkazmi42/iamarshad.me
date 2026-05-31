@@ -98,16 +98,19 @@
   # `external_url` overrides the GitHub link for non-GitHub-hosted projects (e.g. PyPI).
   # `lang_color` = GitHub's official language color (used for the language dot).
   # Ordered roughly by impressiveness (stars + recency + topic relevance to Arshad's brand).
+  # `:span` controls bento size in the OSS grid — same pattern as `shipping`.
+  # Order in this array IS the grid-flow order: the tall `currency-symbols`
+  # leads so it anchors the top-left column for two rows.
   oss = [
-    { name: "first-issues",         repo: "arshadkazmi42/first-issues",         lang: "Python",     lang_color: "#3572A5", blurb: "Twitter bot tweeting good-first-issues for new OSS contributors." },
-    { name: "ak-cli",               repo: "arshadkazmi42/ak-cli",               lang: "Shell",      lang_color: "#89e051", blurb: "Personal collection of CLI shortcuts I use every day." },
-    { name: "github-scanner-local", repo: "arshadkazmi42/github-scanner-local", lang: "Shell",      lang_color: "#89e051", blurb: "Local-only secret scanner for any GitHub org's repos." },
-    { name: "currency-symbols",     repo: "arshadkazmi42/currency-symbols",     lang: "Python",     lang_color: "#3572A5", blurb: "Tiny PyPI lib: ISO currency codes → symbols.", external_url: "https://pypi.org/project/currency-symbols/", pypi: "currency-symbols" },
-    { name: "strix-claude-code",    repo: "arshadkazmi42/strix-claude-code",    lang: "Python",     lang_color: "#3572A5", blurb: "An AI pentest agent that lives inside Claude Code." },
-    { name: "squash",               repo: "arshadkazmi42/squash",               lang: "JavaScript", lang_color: "#f1e05a", blurb: "Save command chains under a single shortcut name." },
-    { name: "deep-code",            repo: "arshadkazmi42/deep-code",            lang: "Python",     lang_color: "#3572A5", blurb: "Claude Code-style agent powered by the Deepseek API." },
-    { name: "flip-remote",          repo: "arshadkazmi42/flip-remote",          lang: "JavaScript", lang_color: "#f1e05a", blurb: "Toggle git remote between HTTPS and SSH instantly." },
-    { name: "tokens-analyze",       repo: "arshadkazmi42/tokens-analyze",       lang: "Shell",      lang_color: "#89e051", blurb: "Analyze leaked API tokens; figure out what each one unlocks." },
+    { name: "currency-symbols",     repo: "arshadkazmi42/currency-symbols",     lang: "Python",     lang_color: "#3572A5", span: "tall",  blurb: "Tiny PyPI lib: ISO currency codes → symbols.", external_url: "https://pypi.org/project/currency-symbols/", pypi: "currency-symbols" },
+    { name: "first-issues",         repo: "arshadkazmi42/first-issues",         lang: "Python",     lang_color: "#3572A5", span: "wide",  blurb: "Twitter bot tweeting good-first-issues for new OSS contributors." },
+    { name: "ak-cli",               repo: "arshadkazmi42/ak-cli",               lang: "Shell",      lang_color: "#89e051", span: "small", blurb: "Personal collection of CLI shortcuts I use every day." },
+    { name: "strix-claude-code",    repo: "arshadkazmi42/strix-claude-code",    lang: "Python",     lang_color: "#3572A5", span: "wide",  blurb: "An AI pentest agent that lives inside Claude Code." },
+    { name: "github-scanner-local", repo: "arshadkazmi42/github-scanner-local", lang: "Shell",      lang_color: "#89e051", span: "small", blurb: "Local-only secret scanner for any GitHub org's repos." },
+    { name: "squash",               repo: "arshadkazmi42/squash",               lang: "JavaScript", lang_color: "#f1e05a", span: "small", blurb: "Save command chains under a single shortcut name." },
+    { name: "deep-code",            repo: "arshadkazmi42/deep-code",            lang: "Python",     lang_color: "#3572A5", span: "small", blurb: "Claude Code-style agent powered by the Deepseek API." },
+    { name: "flip-remote",          repo: "arshadkazmi42/flip-remote",          lang: "JavaScript", lang_color: "#f1e05a", span: "small", blurb: "Toggle git remote between HTTPS and SSH instantly." },
+    { name: "tokens-analyze",       repo: "arshadkazmi42/tokens-analyze",       lang: "Shell",      lang_color: "#89e051", span: "small", blurb: "Analyze leaked API tokens; figure out what each one unlocks." },
   ]
 
   # Bounty platforms. Each card uses two colors:
@@ -1341,41 +1344,39 @@
   .bcard:hover .pcta { border-color: var(--pca, var(--pc)); }
   .bcard .pcta svg { width: 9px; height: 9px; }
 
-  /* ── OSS: same horizontal-scroll showcase pattern as Shipping ──────── */
-  .oss-rail-wrap {
-    position: relative;
-    margin: 0 -24px;
-  }
-  .oss-rail-wrap::before,
-  .oss-rail-wrap::after {
-    content: ""; position: absolute;
-    top: 0; bottom: 16px; width: 40px;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .oss-rail-wrap::before { left: 0;  background: linear-gradient(to right, var(--bg), transparent); }
-  .oss-rail-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
+  /* ── OSS: same mixed-span bento as Shipping ─────────────────────────
+     4-col grid. Spans (declared per repo in the data array):
+       currency-symbols → tall  (1×2)  — anchors top-left, two rows
+       first-issues     → wide  (2×1)  — biggest stars
+       strix-claude-code→ wide  (2×1)  — recent + on-brand
+       rest             → small (1×1)
+     12 cells in 4×3. */
   .oss-grid {
-    display: flex;
-    gap: 14px;
-    overflow-x: auto;
-    overflow-y: visible;
-    padding: 6px 24px 18px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.15) transparent;
-    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 180px;
+    gap: 12px;
+    grid-auto-flow: dense;          /* fill gaps left by spans */
   }
-  .oss-grid::-webkit-scrollbar { height: 6px; }
-  .oss-grid::-webkit-scrollbar-track { background: transparent; }
-  .oss-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
-  .oss-grid > .oss-card {
-    flex: 0 0 290px;
-    scroll-snap-align: start;
-    min-height: 160px;
+  .oss-card.span-wide  { grid-column: span 2; }
+  .oss-card.span-tall  { grid-row:    span 2; }
+  .oss-card.span-small { /* default 1×1 */ }
+  .oss-card.span-small .oss-card-blurb { display: none; }
+  .oss-card.span-small .oss-card-name  { font-size: 13px; }
+  .oss-card.span-tall  .oss-card-name  { font-size: 18px; }
+  .oss-card.span-tall  .oss-card-blurb { font-size: 13px; }
+
+  @media (max-width: 1023px) {
+    .oss-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+    .oss-card.span-wide  { grid-column: span 2; }
+    .oss-card.span-tall  { grid-row:    span 1; }
+    .oss-card.span-small { grid-column: span 1; }
   }
   @media (max-width: 540px) {
-    .oss-grid > .oss-card { flex: 0 0 82vw; }
+    .oss-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .oss-card.span-wide, .oss-card.span-tall, .oss-card.span-small {
+      grid-column: span 1; grid-row: span 1; min-height: 130px;
+    }
   }
   .oss-card {
     --lc: var(--text);
@@ -1825,12 +1826,11 @@
     <h2>Open source.</h2>
     <p class="section-sub">A few of the 327 repos I've made public. Most are tiny on purpose.</p>
 
-    <div class="oss-rail-wrap">
     <div class="oss-grid">
       <% oss.each do |repo| %>
         <% link = repo[:external_url] || "https://github.com/#{repo[:repo]}" %>
         <a href="<%= link %>" target="_blank" rel="noopener"
-           class="oss-card" style="--lc: <%= repo[:lang_color] %>;">
+           class="oss-card span-<%= repo[:span] || 'small' %>" style="--lc: <%= repo[:lang_color] %>;">
           <div class="oss-card-top">
             <span class="oss-card-lang-pill">
               <span class="swatch"></span><%= repo[:lang] %>
@@ -1852,7 +1852,6 @@
           <% end %>
         </a>
       <% end %>
-    </div>
     </div>
 
     <div style="text-align: center;">
