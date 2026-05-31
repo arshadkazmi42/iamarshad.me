@@ -248,11 +248,15 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Bento grid: asymmetric 4×3 with one 2×2 featured tile ──────────── */
+  /* ── Bento grid: real asymmetry across 4 cols × 4 rows ─────────────────
+     Row heights vary to break uniformity:
+       rows 1-2: 158px (housing the 2×2 iScan flagship + 4 small tiles)
+       row 3:    158px (currency-symbols 2-wide terminal + 2 small tiles)
+       row 4:     86px (archive strip, full-width footer cell) */
   .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 148px;
+    grid-template-rows: 158px 158px 158px 86px;
     gap: 12px;
     margin-top: 24px;
     animation: fadeUp 0.8s 0.24s ease-out both;
@@ -272,28 +276,41 @@
   }
   .bento-tile:hover { transform: translateY(-3px); }
 
-  /* Featured 2×2 tile — gets prominence in the grid (iScan) */
+  /* Featured 2×2 tile — gets prominence in the grid (iScan flagship) */
   .bento-feature {
     grid-column: span 2;
     grid-row: span 2;
-    padding: 22px;
+    padding: 26px;
   }
   .bento-feature .bento-app-name {
-    font-size: clamp(28px, 4.2vw, 44px);
+    font-size: clamp(32px, 4.6vw, 50px);
   }
   .bento-feature .bento-app-tag {
     font-size: 11px;
-    margin-top: 8px;
+    margin-top: 10px;
   }
   .bento-feature .featured-desc {
     margin-top: 14px;
     font-size: 13.5px; line-height: 1.55;
     color: rgba(255,255,255,0.86);
-    max-width: 320px;
+    max-width: 360px;
   }
   .bento-feature .featured-star {
     width: 14px; height: 14px;
     color: rgba(255,255,255,0.85);
+  }
+  /* Smaller (1×1) app tiles: bigger name than before to fill the smaller card */
+  .bento-app:not(.bento-feature) .bento-app-name {
+    font-size: clamp(22px, 2.8vw, 28px);
+  }
+  .bento-app:not(.bento-feature) .bento-app-tag {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .bento-app:not(.bento-feature) .bento-app-icon {
+    right: -18px; bottom: -18px;
+    width: 95px; height: 95px;
+    color: rgba(255, 255, 255, 0.18);
   }
 
   /* Mouse-follow spotlight overlay — premium "depth" cue on every tile.
@@ -390,125 +407,142 @@
     color: rgba(255,255,255,0.8);
   }
 
-  /* Package tile — highlight an OSS package with live download count.
-     Currently used for `currency-symbols` (931k+ monthly downloads). */
+  /* Package tile — terminal-block aesthetic to set it apart from the
+     SaaS-colored cards. Spans 2 cols. Looks like real shell output. */
   .bento-package {
-    background:
-      radial-gradient(circle at 85% 15%, rgba(34, 211, 238, 0.45) 0%, transparent 60%),
-      linear-gradient(150deg, rgba(14, 116, 144, 0.65), rgba(8, 47, 73, 0.7));
-    border-color: rgba(34, 211, 238, 0.4);
-    color: #fff;
-  }
-  .bento-package::after {
-    content: ""; position: absolute;
-    bottom: -48px; right: -48px;
-    width: 140px; height: 140px; border-radius: 50%;
-    background: #22d3ee; opacity: 0.28;
-    filter: blur(45px); pointer-events: none;
+    grid-column: span 2;
+    background: #06070d;
+    border: 1px solid rgba(34, 211, 238, 0.28);
+    display: flex; flex-direction: column;
+    padding: 0;                 /* let the chrome bar own the top edge */
+    overflow: hidden;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
   }
   .bento-package:hover {
-    border-color: rgba(34, 211, 238, 0.75);
-    box-shadow: 0 18px 40px -12px rgba(34, 211, 238, 0.45);
+    border-color: rgba(34, 211, 238, 0.7);
+    box-shadow: 0 18px 40px -12px rgba(34, 211, 238, 0.4);
   }
-  .bento-package-top {
+  /* Terminal chrome bar (traffic lights + breadcrumb) */
+  .term-chrome {
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 14px;
+    background: #0c0e16;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .term-lights { display: inline-flex; gap: 5px; }
+  .term-lights span {
+    width: 9px; height: 9px; border-radius: 50%;
+  }
+  .term-lights span:nth-child(1) { background: #ff5f57; }
+  .term-lights span:nth-child(2) { background: #febc2e; }
+  .term-lights span:nth-child(3) { background: #28c840; }
+  .term-title {
+    flex: 1; text-align: center;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+  }
+  .term-body {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 14px 20px 16px;
+    gap: 6px;
     position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: space-between;
   }
-  .bento-package-label {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 9px; font-weight: 800;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: #67e8f9;
-    padding: 3px 8px; border-radius: 999px;
-    background: rgba(34, 211, 238, 0.12);
-    border: 1px solid rgba(34, 211, 238, 0.3);
-  }
-  .bento-package-top .arrow {
-    width: 16px; height: 16px;
-    color: rgba(255, 255, 255, 0.7);
-    transition: transform 0.2s, color 0.2s;
-  }
-  .bento-package:hover .arrow {
-    color: #fff;
-    transform: translate(2px, -2px);
-  }
-  .bento-package-main {
-    position: relative; z-index: 1;
-  }
-  .bento-package-num {
-    font-size: 38px; font-weight: 900;
-    letter-spacing: -0.035em; line-height: 1;
-    background: linear-gradient(135deg, #a5f3fc, #67e8f9 60%, #22d3ee);
+  .term-line { font-size: 13px; line-height: 1.45; }
+  .term-prompt { color: rgba(255,255,255,0.45); margin-right: 6px; }
+  .term-cmd    { color: #fff; }
+  .term-pkg    { color: #facc15; font-weight: 700; }
+  .term-out    { color: #67e8f9; }
+  .term-out .ok { color: #34d399; margin-right: 4px; }
+  .term-out .big {
+    font-size: 22px; font-weight: 900;
+    background: linear-gradient(135deg, #a5f3fc, #67e8f9);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 0 4px;
+    vertical-align: -1px;
   }
-  .bento-package-suffix {
-    font-size: 10px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(165, 243, 252, 0.7);
-    margin-top: 5px;
+  .term-out .dim { color: rgba(255,255,255,0.5); }
+  .term-arrow {
+    position: absolute; top: 14px; right: 14px;
+    width: 14px; height: 14px;
+    color: rgba(255,255,255,0.4);
+    transition: color 0.2s, transform 0.2s;
   }
-  .bento-package-name {
-    position: relative; z-index: 1;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 12px; color: rgba(255, 255, 255, 0.65);
+  .bento-package:hover .term-arrow {
+    color: #67e8f9; transform: translate(2px, -2px);
   }
-  /* Python language watermark for the currency-symbols tile */
-  .bento-package::before {
-    content: ""; position: absolute;
-    right: -18px; bottom: -18px;
-    width: 100px; height: 100px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff' opacity='0.1'%3E%3Cpath d='M9.9 2C7.6 2 5.7 3.9 5.7 6.2v3.1h4.2v.6H3.7C1.4 9.9 0 11.8 0 14.1v3.7c0 2.3 1.9 4.2 4.2 4.2h2.6v-3.4c0-2.3 1.9-4.2 4.2-4.2h7.3c1.8 0 3.3-1.5 3.3-3.3V6.2C21.6 3.9 19.7 2 17.4 2H9.9zm-2.6 1.8c.7 0 1.3.6 1.3 1.3s-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3.6-1.3 1.3-1.3z'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    pointer-events: none; z-index: 0;
+  /* Subtle scanline pattern in the terminal background */
+  .term-body::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(34, 211, 238, 0.025) 3px,
+      rgba(34, 211, 238, 0.025) 4px
+    );
+    pointer-events: none; z-index: -1;
   }
 
-  /* Closed tile — link to the full archive */
+  /* Closed strip — full-width footer cell of the bento.
+     Horizontal layout: archived count + label + see-archive CTA. */
   .bento-closed {
-    align-items: center; justify-content: center; text-align: center;
+    grid-column: span 4;
+    flex-direction: row; align-items: center; justify-content: space-between;
+    padding: 16px 26px;
     background: rgba(255,255,255,0.018);
   }
   .bento-closed:hover {
     border-color: var(--line-strong);
     background: rgba(255,255,255,0.035);
   }
+  .bento-closed-l {
+    display: flex; align-items: baseline; gap: 14px;
+  }
   .bento-closed-num {
-    font-size: 42px; font-weight: 900;
-    color: rgba(255,255,255,0.42);
+    font-size: 32px; font-weight: 900;
+    color: rgba(255,255,255,0.4);
     letter-spacing: -0.03em; line-height: 1;
   }
   .bento-closed-label {
-    font-size: 10px; font-weight: 700;
+    font-size: 11px; font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--muted);
-    margin: 6px 0 14px;
   }
   .bento-closed-cta {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--muted);
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-    width: 70%;
-    justify-content: center;
     transition: color 0.2s;
   }
+  .bento-closed-cta svg { width: 12px; height: 12px; }
   .bento-closed:hover .bento-closed-cta { color: var(--text); }
+  .bento-closed:hover .bento-closed-cta svg { transform: translate(2px, -1px); }
 
   @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 760px) {
-    .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 132px; }
-    .bento-feature { grid-column: span 2; grid-row: span 1; }
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      grid-auto-rows: 130px;
+    }
+    .bento-feature { grid-column: span 2; grid-row: span 1; min-height: 200px; }
     .bento-feature .bento-app-name { font-size: 28px; }
     .bento-feature .featured-desc { display: none; }
+    .bento-package { grid-column: span 2; }
+    .bento-closed { grid-column: span 2; }
   }
   @media (max-width: 460px) {
     .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
     .bento-tile { min-height: 120px; }
-    .bento-feature { grid-column: span 1; }
+    .bento-feature, .bento-package, .bento-closed { grid-column: span 1; }
+    .term-body { padding: 14px 16px; }
+    .term-line { font-size: 12px; }
+    .term-out .big { font-size: 18px; }
   }
 
   /* Shared .social pill style — still used by the About section below */
@@ -1110,36 +1144,42 @@
           </div>
         </a>
         <% if i == 4 %>
-          <!-- Highlighted OSS package: currency-symbols. ~931k monthly
-               PyPI downloads, live-fetched via shields.io (same wiring
-               as the OSS section's download pills). -->
+          <!-- Highlighted OSS package: currency-symbols. Terminal-block
+               aesthetic (mono, $ prompt, scanlines) sets it apart from
+               the SaaS app tiles. Download count live-fetched via shields.io. -->
           <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
-             class="bento-tile bento-package">
-            <div class="bento-package-top">
-              <span class="bento-package-label">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg>
-                PyPI · Open source
-              </span>
-              <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-              </svg>
+             class="bento-tile bento-package" aria-label="currency-symbols on PyPI — live monthly downloads">
+            <div class="term-chrome">
+              <span class="term-lights"><span></span><span></span><span></span></span>
+              <span class="term-title">pypi.org / currency-symbols</span>
             </div>
-            <div class="bento-package-main">
-              <div class="bento-package-num" data-downloads-of="pypi/currency-symbols">—</div>
-              <div class="bento-package-suffix">downloads / month</div>
+            <svg class="term-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+            </svg>
+            <div class="term-body">
+              <div class="term-line">
+                <span class="term-prompt">$</span><span class="term-cmd">pip install </span><span class="term-pkg">currency-symbols</span>
+              </div>
+              <div class="term-line term-out">
+                <span class="ok">✓</span>downloaded <span class="big" data-downloads-of="pypi/currency-symbols">—</span><span class="dim">× / month</span>
+              </div>
             </div>
-            <div class="bento-package-name">currency-symbols</div>
           </a>
         <% end %>
       <% end %>
 
-      <!-- Archive link as the last cell. -->
+      <!-- Archive footer strip — full width row at the bottom of the bento. -->
       <a href="#shipping" class="bento-tile bento-closed">
-        <div>
-          <div class="bento-closed-num"><%= closed_apps.length %></div>
-          <div class="bento-closed-label">Retired apps</div>
-        </div>
-        <span class="bento-closed-cta">See archive →</span>
+        <span class="bento-closed-l">
+          <span class="bento-closed-num"><%= closed_apps.length %></span>
+          <span class="bento-closed-label">Retired apps · still part of the journey</span>
+        </span>
+        <span class="bento-closed-cta">
+          See archive
+          <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="transition: transform 0.2s;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-7-7l7 7-7 7"/>
+          </svg>
+        </span>
       </a>
     </div>
   </section>
