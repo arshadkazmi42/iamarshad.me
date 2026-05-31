@@ -29,21 +29,51 @@
       blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
     { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee",
       icon: 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+      snippet: [
+        { s: :ok,   t: "● LIVE · watching" },
+        { s: :dim,  t: "[2m]  github.com/x/.env" },
+        { s: :dim,  t: "[5m]  npm/scope/pkg-zzz" },
+      ],
       blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
     { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d",
       icon: 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
+      snippet: [
+        { s: :ok,   t: "✓ 47 domains monitored" },
+        { s: :warn, t: "⚠ next expiry · 12 days" },
+        { s: :dim,  t: "  app.example.com" },
+      ],
       blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
     { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399",
       icon: 'M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244',
+      snippet: [
+        { s: :ok,   t: "→ ilink.today/x4f9z" },
+        { s: :dim,  t: "🔐 e2e · 24h ttl" },
+        { s: :dim,  t: "1,247 links shared" },
+      ],
       blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
     { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def",
       icon: 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
+      snippet: [
+        { s: :prompt, t: "PR #1234  +18 -7" },
+        { s: :ok,     t: "⚡ ai review · 92%" },
+        { s: :dim,    t: "api.ts:48 cited" },
+      ],
       blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
     { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185",
       icon: 'M9.75 9.75 14.25 14.25m0-4.5L9.75 14.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+      snippet: [
+        { s: :warn, t: "⊘ 1,247 bots blocked" },
+        { s: :dim,  t: "today on x.com" },
+        { s: :dim,  t: "engagement farm bots" },
+      ],
       blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
     { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6",
       icon: 'M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z',
+      snippet: [
+        { s: :prompt, t: "$ iwatcher GHP_****" },
+        { s: :ok,     t: "✓ read · repo · 12 repos" },
+        { s: :warn,   t: "⚠ admin · org · 3 orgs" },
+      ],
       blurb: "Paste any GitHub access token and instantly see exactly what it unlocks.",                              status: :live },
 
     # ── closed / retired ───────────────────────────────────────────────
@@ -262,194 +292,225 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Hero showcase: featured flagship + tight app list (no more grid) ───
-     Left column: one rich "featured" card for the flagship app (iScan),
-     containing a mock terminal output showing what the product actually does.
-     Right column: a vertical list of the remaining apps as compact rows.
-     Below the showcase: a full-width currency-symbols terminal + a closed strip. */
-  .hero-showcase {
+  /* ── Hero: 4×2 grid of equal-weight rich SaaS cards ─────────────────
+     Every app gets the same visual weight: brand-color top bar, name,
+     tag, a 3-line mock terminal snippet showing real product behaviour. */
+  .app-cards-grid {
     display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 14px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
     margin-top: 28px;
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
-  @media (max-width: 760px) {
-    .hero-showcase { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 1023px) { .app-cards-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 760px)  { .app-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px)  { .app-cards-grid { grid-template-columns: 1fr; } }
 
-  /* ── Featured card (iScan flagship) ─────────────────────────────────── */
-  .featured-card {
-    --pc: #7c5cff;
+  /* ── App card (one per live SaaS, equal weight in the grid) ──────── */
+  .app-card {
+    --pc: var(--text);
     --mx: 50%; --my: 50%;
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    background: linear-gradient(165deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+    background: linear-gradient(165deg, rgba(255,255,255,0.038), rgba(255,255,255,0.01));
     border: 1px solid var(--line);
-    border-radius: 18px;
+    border-radius: 16px;
+    padding: 14px;
     text-decoration: none;
     transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    min-height: 480px;
+    min-height: 230px;
   }
-  /* Top accent bar in brand color, fading out — signature of the card */
-  .featured-card::before {
+  /* Top accent bar in brand color, fading out */
+  .app-card::before {
     content: ""; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--pc) 0%, color-mix(in srgb, var(--pc) 40%, transparent) 60%, transparent 100%);
-    box-shadow: 0 0 18px color-mix(in srgb, var(--pc) 70%, transparent);
+    top: 0; left: 0; right: 0; height: 2.5px;
+    background: linear-gradient(90deg, var(--pc) 0%, color-mix(in srgb, var(--pc) 40%, transparent) 65%, transparent 100%);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--pc) 60%, transparent);
     z-index: 2;
   }
   /* Soft brand-color glow blob in the top-right */
-  .featured-card::after {
+  .app-card::after {
     content: ""; position: absolute;
-    top: -60px; right: -60px;
-    width: 220px; height: 220px; border-radius: 50%;
-    background: var(--pc); opacity: 0.16;
-    filter: blur(60px); pointer-events: none;
+    top: -50px; right: -50px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: var(--pc); opacity: 0.10;
+    filter: blur(40px); pointer-events: none;
   }
-  .featured-card:hover {
-    border-color: color-mix(in srgb, var(--pc) 45%, var(--line));
+  .app-card:hover {
+    border-color: color-mix(in srgb, var(--pc) 50%, var(--line));
     transform: translateY(-3px);
-    box-shadow: 0 18px 36px -14px color-mix(in srgb, var(--pc) 35%, transparent);
+    box-shadow: 0 14px 28px -12px color-mix(in srgb, var(--pc) 40%, transparent);
   }
-  /* Spotlight cursor overlay — same recipe as the OSS cards */
-  .featured-card .spotlight {
-    position: absolute; inset: 0;
-    background: radial-gradient(circle 280px at var(--mx) var(--my), rgba(255,255,255,0.07), transparent 55%);
-    pointer-events: none; opacity: 0;
-    transition: opacity 0.35s; z-index: 1;
-  }
-  .featured-card:hover .spotlight { opacity: 1; }
+  .app-card:hover::after { opacity: 0.18; }
 
-  .featured-head {
-    padding: 26px 26px 0;
-    display: flex; justify-content: space-between; align-items: flex-start;
+  .app-card-top {
     position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
   }
-  .featured-head .crown {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 10px; font-weight: 800;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--pc);
-    padding: 4px 10px; border-radius: 999px;
-    background: color-mix(in srgb, var(--pc) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent);
+  .app-card-live {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--pc);
+    box-shadow: 0 0 8px var(--pc);
+    animation: pulseDot 2s infinite;
   }
-  .featured-head .crown svg { width: 11px; height: 11px; fill: currentColor; }
-  .featured-head .arrow {
-    width: 16px; height: 16px;
-    color: var(--muted);
+  .app-card-arrow {
+    width: 13px; height: 13px;
+    color: rgba(255, 255, 255, 0.35);
     transition: color 0.2s, transform 0.2s;
   }
-  .featured-card:hover .featured-head .arrow {
+  .app-card:hover .app-card-arrow {
     color: var(--pc);
     transform: translate(2px, -2px);
   }
-  .featured-name {
+  .app-card-name {
     position: relative; z-index: 2;
-    padding: 14px 26px 4px;
-    font-size: clamp(36px, 4.6vw, 52px); font-weight: 900;
-    letter-spacing: -0.03em; line-height: 1;
+    font-size: 22px; font-weight: 900;
+    letter-spacing: -0.025em; line-height: 1;
     color: var(--text);
   }
-  .featured-name .tld { color: var(--muted); font-weight: 500; }
-  .featured-tag {
+  .app-card-name .tld { color: var(--muted); font-weight: 500; }
+  .app-card-tag {
     position: relative; z-index: 2;
-    padding: 0 26px;
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
+    margin-top: 4px;
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--pc);
   }
-  /* Mock-terminal snippet inside the featured card — the "what it does" hook */
-  .featured-snippet {
+  /* Mini mock terminal — the "what it does" hook per card */
+  .app-card-snippet {
     position: relative; z-index: 2;
-    margin: 18px 26px;
-    padding: 14px 16px;
-    background: rgba(0, 0, 0, 0.35);
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.32);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    border-radius: 8px;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 12.5px; line-height: 1.65;
+    font-size: 10.5px; line-height: 1.65;
     overflow: hidden;
+    flex: 1;
   }
-  .featured-snippet .l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .featured-snippet .prompt { color: rgba(255,255,255,0.4); margin-right: 6px; }
-  .featured-snippet .cmd    { color: rgba(255,255,255,0.9); }
-  .featured-snippet .warn   { color: #fbbf24; }
-  .featured-snippet .ok     { color: #34d399; }
-  .featured-snippet .dim    { color: rgba(255,255,255,0.3); }
-  .featured-blurb {
-    position: relative; z-index: 2;
-    padding: 0 26px 22px;
-    font-size: 13.5px; line-height: 1.55;
-    color: var(--muted);
-    margin-top: auto;
-  }
-  .featured-blurb strong { color: var(--text); font-weight: 600; }
+  .app-card-snippet .l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app-card-snippet .prompt { color: rgba(255,255,255,0.4); margin-right: 4px; }
+  .app-card-snippet .cmd    { color: rgba(255,255,255,0.9); }
+  .app-card-snippet .warn   { color: #fbbf24; }
+  .app-card-snippet .ok     { color: #34d399; }
+  .app-card-snippet .dim    { color: rgba(255,255,255,0.35); }
 
-  /* ── App list (right column) ────────────────────────────────────────── */
-  .app-list {
-    display: flex; flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--line);
+  /* ── OSS feature card (currency-symbols) ─────────────────────────────
+     Clearly says "this is an open-source Python library, not a SaaS":
+     Python badge, OPEN SOURCE badge, MIT badge, install command,
+     downloads + stars stats. Distinct from the SaaS app cards. */
+  .oss-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    background: #06070d;
+    border: 1px solid rgba(34, 211, 238, 0.28);
     border-radius: 18px;
     overflow: hidden;
-    min-height: 480px;
-  }
-  .app-list-row {
-    --pc: var(--text);
-    flex: 1;
-    display: flex; align-items: center;
-    padding: 16px 20px;
-    gap: 14px;
     text-decoration: none;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.2s, padding-left 0.25s;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  }
+  .oss-feature:hover {
+    border-color: rgba(34, 211, 238, 0.55);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px -14px rgba(34, 211, 238, 0.4);
+  }
+  @media (max-width: 540px) {
+    .oss-feature { grid-template-columns: 1fr; }
+  }
+  .oss-feature-left {
+    padding: 22px 24px;
+    display: flex; flex-direction: column;
     position: relative;
   }
-  .app-list-row::before {
-    content: ""; position: absolute;
-    top: 0; left: 0; bottom: 0; width: 2px;
-    background: var(--pc); opacity: 0;
-    transition: opacity 0.25s;
+  .oss-badges {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
   }
-  .app-list-row:last-child { border-bottom: none; }
-  .app-list-row:hover {
-    background: color-mix(in srgb, var(--pc) 8%, transparent);
-    padding-left: 26px;
+  .oss-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px;
   }
-  .app-list-row:hover::before { opacity: 1; }
-  .app-list-dot {
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--pc);
-    box-shadow: 0 0 10px var(--pc);
-    flex-shrink: 0;
+  .oss-badge.python {
+    background: rgba(53, 114, 165, 0.16);
+    color: #79b8ff;
+    border: 1px solid rgba(53, 114, 165, 0.42);
   }
-  .app-list-info { flex: 1; min-width: 0; }
-  .app-list-name {
-    font-size: 17px; font-weight: 800;
-    color: var(--text);
-    letter-spacing: -0.015em;
-    line-height: 1.2;
+  .oss-badge.python svg { width: 11px; height: 11px; fill: #79b8ff; }
+  .oss-badge.opensource {
+    background: rgba(52, 211, 153, 0.13);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.3);
   }
-  .app-list-name .tld { color: var(--muted); font-weight: 500; }
-  .app-list-tag {
-    font-size: 11.5px;
+  .oss-badge.opensource svg { width: 11px; height: 11px; fill: currentColor; }
+  .oss-badge.license {
+    background: rgba(255, 255, 255, 0.03);
     color: var(--muted);
-    margin-top: 2px;
-    line-height: 1.4;
+    border: 1px solid var(--line);
   }
-  .app-list-arrow {
-    flex-shrink: 0; color: var(--muted);
-    transition: color 0.2s, transform 0.2s;
-    width: 14px; height: 14px;
+  .oss-feature-title {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: clamp(22px, 2.6vw, 28px); font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 8px;
   }
-  .app-list-row:hover .app-list-arrow {
-    color: var(--pc);
-    transform: translate(2px, -2px);
+  .oss-feature-desc {
+    font-size: 13px; color: var(--muted); line-height: 1.55;
+    margin-bottom: 16px;
   }
+  .oss-install {
+    margin-top: auto;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+  }
+  .oss-install .prompt { color: rgba(255,255,255,0.4); margin-right: 6px; }
+  .oss-install .cmd { color: #fff; }
+  .oss-install .pkg { color: #67e8f9; font-weight: 700; }
+  .oss-feature-right {
+    padding: 22px 24px;
+    border-left: 1px solid rgba(34, 211, 238, 0.12);
+    background: rgba(34, 211, 238, 0.025);
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 16px;
+  }
+  @media (max-width: 540px) {
+    .oss-feature-right { border-left: none; border-top: 1px solid rgba(34, 211, 238, 0.12); flex-direction: row; }
+  }
+  .oss-stat-block {
+    display: flex; flex-direction: column;
+  }
+  .oss-stat-num {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 32px; font-weight: 900;
+    letter-spacing: -0.025em; line-height: 1;
+    background: linear-gradient(135deg, #a5f3fc, #22d3ee);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .oss-stat-label {
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .oss-feature-right .external {
+    display: flex; align-items: center; gap: 5px;
+    margin-top: 8px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .oss-feature:hover .oss-feature-right .external { color: #67e8f9; }
 
-  /* ── Hero bottom strip (terminal + closed, stacked full-width) ──────── */
+  /* ── Hero bottom (closed strip) ─────────────────────────────────── */
   .hero-bottom {
     display: flex; flex-direction: column;
     gap: 12px;
@@ -1298,77 +1359,73 @@
       </p>
     </div>
 
-    <%
-      flagship  = live_apps.first              # iScan
-      rest_apps = live_apps.drop(1)            # the other 6 live apps
-    %>
-
-    <div class="hero-showcase">
-      <!-- ── Left: FEATURED flagship card (iScan + mock terminal output) ── -->
-      <a href="<%= flagship[:url] %>" target="_blank" rel="noopener"
-         class="featured-card" style="--pc: <%= flagship[:color] %>;">
-        <span class="spotlight"></span>
-        <div class="featured-head">
-          <span class="crown">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-            Flagship · Built for bug bounty
-          </span>
-          <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-          </svg>
-        </div>
-        <h2 class="featured-name"><%= flagship[:name] %><span class="tld"><%= flagship[:tld] %></span></h2>
-        <div class="featured-tag"><%= flagship[:tag] %></div>
-        <div class="featured-snippet" aria-hidden="true">
-          <% flagship[:snippet].each do |line| %>
-            <span class="l">
-              <% if line[:s] == :prompt %>
-                <span class="prompt">$</span><span class="cmd"><%= line[:t].sub(/^\$ /, '') %></span>
-              <% else %>
-                <span class="<%= line[:s] %>"><%= line[:t] %></span>
-              <% end %>
-            </span>
-          <% end %>
-        </div>
-        <p class="featured-blurb"><%= flagship[:blurb] %></p>
-      </a>
-
-      <!-- ── Right: tight LIST of the other 6 live apps ──────────────── -->
-      <div class="app-list">
-        <% rest_apps.each do |app| %>
-          <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-             class="app-list-row" style="--pc: <%= app[:color] %>;">
-            <span class="app-list-dot"></span>
-            <div class="app-list-info">
-              <div class="app-list-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-              <div class="app-list-tag"><%= app[:tag] %></div>
-            </div>
-            <svg class="app-list-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+    <!-- ── All 7 live SaaS apps as equal-weight rich cards (4×2 grid) ── -->
+    <div class="app-cards-grid">
+      <% live_apps.each do |app| %>
+        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+           class="app-card" style="--pc: <%= app[:color] %>;">
+          <div class="app-card-top">
+            <span class="app-card-live" title="live"></span>
+            <svg class="app-card-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
             </svg>
-          </a>
-        <% end %>
-      </div>
+          </div>
+          <div class="app-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+          <div class="app-card-tag"><%= app[:tag] %></div>
+          <div class="app-card-snippet" aria-hidden="true">
+            <% app[:snippet].each do |line| %>
+              <span class="l">
+                <% if line[:s] == :prompt %>
+                  <span class="prompt"><%= line[:t][0] %></span><span class="cmd"><%= line[:t][1..] %></span>
+                <% else %>
+                  <span class="<%= line[:s] %>"><%= line[:t] %></span>
+                <% end %>
+              </span>
+            <% end %>
+          </div>
+        </a>
+      <% end %>
     </div>
 
-    <!-- ── Below showcase: currency-symbols terminal + closed-archive strip ── -->
+    <!-- ── Open-source feature: currency-symbols ─────────────────────
+         Distinct from SaaS apps: language + open-source + license badges
+         on the left, install command, big download/star stats on the right. -->
     <div class="hero-bottom">
       <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
-         class="bento-package" aria-label="currency-symbols on PyPI — live monthly downloads">
-        <div class="term-chrome">
-          <span class="term-lights"><span></span><span></span><span></span></span>
-          <span class="term-title">pypi.org / currency-symbols  ·  open-source highlight</span>
+         class="oss-feature" aria-label="currency-symbols on PyPI — open-source library">
+        <div class="oss-feature-left">
+          <div class="oss-badges">
+            <span class="oss-badge python">
+              <svg viewBox="0 0 24 24"><path d="M14.31 0c.83 0 1.51.67 1.51 1.5v3a1.5 1.5 0 01-1.5 1.5h-4.62a1.5 1.5 0 00-1.5 1.5V9h7.62a1.5 1.5 0 011.5 1.5v6a1.5 1.5 0 01-1.5 1.5h-1.5v-1.5a3 3 0 00-3-3H8.69a3 3 0 01-3-3V4.5a1.5 1.5 0 011.5-1.5h4.62a1.5 1.5 0 011.5-1.5V0zm-3.94 2.25a.94.94 0 110 1.87.94.94 0 010-1.87z" opacity=".75"/></svg>
+              Python
+            </span>
+            <span class="oss-badge opensource">
+              <svg viewBox="0 0 24 24"><path d="M12 0L0 7l12 7 12-7-12-7zm0 8.5L3.5 6 12 1.5 20.5 6 12 8.5zM12 11l-12-7v10l12 7 12-7V4l-12 7z"/></svg>
+              Open source
+            </span>
+            <span class="oss-badge license">MIT</span>
+          </div>
+          <h3 class="oss-feature-title">currency-symbols</h3>
+          <p class="oss-feature-desc">A tiny Python library. Pass an ISO currency code, get the unicode symbol — battle-tested at almost a million installs every month.</p>
+          <div class="oss-install">
+            <span class="prompt">$</span><span class="cmd">pip install </span><span class="pkg">currency-symbols</span>
+          </div>
         </div>
-        <svg class="term-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-        </svg>
-        <div class="term-body">
-          <div class="term-line">
-            <span class="term-prompt">$</span><span class="term-cmd">pip install </span><span class="term-pkg">currency-symbols</span>
+        <div class="oss-feature-right">
+          <div class="oss-stat-block">
+            <span class="oss-stat-num" data-downloads-of="pypi/currency-symbols">—</span>
+            <span class="oss-stat-label">Downloads / month</span>
           </div>
-          <div class="term-line term-out">
-            <span class="ok">✓</span>downloaded <span class="big" data-downloads-of="pypi/currency-symbols">—</span><span class="dim">× / month</span>
+          <div class="oss-stat-block">
+            <span class="oss-stat-num" data-gh-stars-of="arshadkazmi42/currency-symbols">—</span>
+            <span class="oss-stat-label">GitHub stars</span>
           </div>
+          <span class="external">
+            pypi · github
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+            </svg>
+          </span>
         </div>
       </a>
 
@@ -1740,8 +1797,8 @@
     (function () {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      // Mouse-tracking spotlight on the featured card (driven by --mx/--my).
-      document.querySelectorAll('.featured-card, .oss-card, .ship-card').forEach(function (tile) {
+      // Mouse-tracking spotlight on rich cards (driven by --mx/--my).
+      document.querySelectorAll('.app-card, .oss-card, .ship-card').forEach(function (tile) {
         tile.addEventListener('mousemove', function (e) {
           var r = tile.getBoundingClientRect();
           tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
