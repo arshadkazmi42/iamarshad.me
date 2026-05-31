@@ -292,19 +292,193 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Hero: 4×2 grid of equal-weight rich SaaS cards ─────────────────
-     Every app gets the same visual weight: brand-color top bar, name,
-     tag, a 3-line mock terminal snippet showing real product behaviour. */
-  .app-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+  /* ── Hero: VS Code-style window (sidebar + editor) ───────────────────
+     The whole hero is one window. Sidebar lists every app as a file
+     grouped by status; editor shows the flagship "open" with its
+     mock product output. Reads as a developer's workspace, not a
+     marketing tile grid. */
+  .vscode-hero {
     margin-top: 28px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
-  @media (max-width: 1023px) { .app-cards-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 760px)  { .app-cards-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 460px)  { .app-cards-grid { grid-template-columns: 1fr; } }
+  /* Top chrome: traffic lights + path/title */
+  .vscode-chrome {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px;
+    background: #161b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .vscode-lights { display: inline-flex; gap: 6px; }
+  .vscode-lights span { width: 11px; height: 11px; border-radius: 50%; }
+  .vscode-lights span:nth-child(1) { background: #ff5f57; }
+  .vscode-lights span:nth-child(2) { background: #febc2e; }
+  .vscode-lights span:nth-child(3) { background: #28c840; }
+  .vscode-title {
+    flex: 1; text-align: center;
+    font-size: 11.5px; font-weight: 600;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.02em;
+  }
+
+  .vscode-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 520px;
+  }
+  @media (max-width: 760px) { .vscode-body { grid-template-columns: 1fr; } }
+
+  /* Left: sidebar file tree */
+  .vscode-sidebar {
+    background: #0a0e14;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 0 16px;
+    overflow-y: auto;
+  }
+  @media (max-width: 760px) {
+    .vscode-sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  }
+  .vscode-section { margin-bottom: 12px; }
+  .vscode-section-label {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .vscode-section-label .chev { font-size: 9px; }
+  .vscode-section-label .count { color: rgba(255, 255, 255, 0.3); font-weight: 600; letter-spacing: 0.04em; }
+  .vscode-file {
+    --pc: var(--text);
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 14px 5px 22px;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.78);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .vscode-file:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+  }
+  .vscode-file.is-active {
+    background: color-mix(in srgb, var(--pc) 14%, transparent);
+    color: #fff;
+    border-left-color: var(--pc);
+  }
+  .vscode-file-mark {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pc);
+    box-shadow: 0 0 8px var(--pc);
+    flex-shrink: 0;
+  }
+  .vscode-file.is-closed { color: rgba(255, 255, 255, 0.4); }
+  .vscode-file.is-closed .vscode-file-mark {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: none;
+  }
+  .vscode-file.is-oss .vscode-file-mark {
+    background: #67e8f9;
+    box-shadow: 0 0 8px #67e8f9;
+  }
+
+  /* Right: editor area */
+  .vscode-editor {
+    display: flex; flex-direction: column;
+    background: #0d1117;
+    min-width: 0;
+  }
+  .vscode-tabs {
+    display: flex;
+    background: #161b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 8px;
+  }
+  .vscode-tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 14px;
+    font-size: 12px; font-weight: 600;
+    color: #fff;
+    background: #0d1117;
+    border-top: 2px solid var(--pc, #7c5cff);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .vscode-tab .x {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 14px; line-height: 1;
+  }
+  .vscode-tab .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pc, #7c5cff);
+    box-shadow: 0 0 8px var(--pc, #7c5cff);
+  }
+  .vscode-content {
+    flex: 1;
+    padding: 28px 32px;
+    display: flex; flex-direction: column;
+    gap: 18px;
+  }
+  .vscode-content .h1 {
+    font-family: 'Lexend', sans-serif;
+    font-size: clamp(28px, 3.8vw, 40px);
+    font-weight: 900;
+    letter-spacing: -0.028em;
+    line-height: 1;
+    color: #fff;
+  }
+  .vscode-content .h1 .tld {
+    color: rgba(255, 255, 255, 0.45); font-weight: 500;
+  }
+  .vscode-content .tag {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--pc, #7c5cff);
+  }
+  .vscode-content .term-block {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px; line-height: 1.75;
+  }
+  .vscode-content .term-block .l { display: block; }
+  .vscode-content .term-block .prompt { color: rgba(255,255,255,0.4); margin-right: 6px; }
+  .vscode-content .term-block .cmd    { color: rgba(255,255,255,0.95); }
+  .vscode-content .term-block .warn   { color: #fbbf24; }
+  .vscode-content .term-block .ok     { color: #34d399; }
+  .vscode-content .term-block .dim    { color: rgba(255,255,255,0.35); }
+  .vscode-content .desc {
+    font-family: 'Lexend', sans-serif;
+    font-size: 14.5px; line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .vscode-content .desc strong { color: #fff; font-weight: 600; }
+  .vscode-content .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--pc, #7c5cff);
+    color: #fff;
+    font-family: 'Lexend', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    box-shadow: 0 8px 20px -6px var(--pc, #7c5cff);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .vscode-content .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px -6px var(--pc, #7c5cff);
+  }
+  .vscode-content .cta svg { width: 13px; height: 13px; }
 
   /* ── App card: two-zone design (colored header + dark terminal body) ─── */
   .app-card {
@@ -1360,39 +1534,91 @@
       </p>
     </div>
 
-    <!-- ── All 7 live SaaS apps as equal-weight rich cards (4×2 grid) ── -->
-    <div class="app-cards-grid">
-      <% live_apps.each do |app| %>
-        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="app-card" style="--pc: <%= app[:color] %>;">
-          <div class="app-card-header">
-            <div class="app-card-top">
-              <span class="app-card-live" title="live"></span>
-              <svg class="app-card-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-              </svg>
+    <!-- ── Hero: VS Code-style window. Sidebar lists every app as a
+         file (grouped by status); editor area opens the flagship. -->
+    <% flagship = live_apps.first %>
+    <div class="vscode-hero">
+      <div class="vscode-chrome">
+        <span class="vscode-lights"><span></span><span></span><span></span></span>
+        <span class="vscode-title">~/projects · iam.today  —  apps.code-workspace</span>
+      </div>
+      <div class="vscode-body">
+        <aside class="vscode-sidebar" aria-label="App index">
+          <div class="vscode-section">
+            <div class="vscode-section-label">
+              <span class="chev">▼</span> Live <span class="count">(<%= live_apps.length %>)</span>
             </div>
-            <div class="app-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-            <div class="app-card-tag"><%= app[:tag] %></div>
-          </div>
-          <div class="app-card-body" aria-hidden="true">
-            <% app[:snippet].each do |line| %>
-              <span class="l">
-                <% if line[:s] == :prompt %>
-                  <span class="prompt"><%= line[:t][0] %></span><span class="cmd"><%= line[:t][1..] %></span>
-                <% else %>
-                  <span class="<%= line[:s] %>"><%= line[:t] %></span>
-                <% end %>
-              </span>
+            <% live_apps.each_with_index do |app, i| %>
+              <a class="vscode-file<%= ' is-active' if i == 0 %>"
+                 href="<%= app[:url] %>" target="_blank" rel="noopener"
+                 style="--pc: <%= app[:color] %>;">
+                <span class="vscode-file-mark"></span>
+                <span><%= app[:name].downcase %><%= app[:tld] %></span>
+              </a>
             <% end %>
           </div>
-        </a>
-      <% end %>
+
+          <div class="vscode-section">
+            <div class="vscode-section-label">
+              <span class="chev">▼</span> Open-source <span class="count">(1)</span>
+            </div>
+            <a class="vscode-file is-oss"
+               href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener">
+              <span class="vscode-file-mark"></span>
+              <span>currency-symbols</span>
+            </a>
+          </div>
+
+          <div class="vscode-section">
+            <div class="vscode-section-label">
+              <span class="chev">▼</span> Retired <span class="count">(<%= closed_apps.length %>)</span>
+            </div>
+            <% closed_apps.each do |app| %>
+              <a class="vscode-file is-closed" href="#shipping">
+                <span class="vscode-file-mark"></span>
+                <span><%= app[:name].downcase %><%= app[:tld] %></span>
+              </a>
+            <% end %>
+          </div>
+        </aside>
+
+        <main class="vscode-editor" style="--pc: <%= flagship[:color] %>;">
+          <div class="vscode-tabs">
+            <span class="vscode-tab">
+              <span class="dot"></span>
+              <%= flagship[:name].downcase %><%= flagship[:tld] %>
+              <span class="x">×</span>
+            </span>
+          </div>
+          <div class="vscode-content">
+            <h2 class="h1"><%= flagship[:name] %><span class="tld"><%= flagship[:tld] %></span></h2>
+            <div class="tag"><%= flagship[:tag] %></div>
+            <div class="term-block" aria-hidden="true">
+              <% flagship[:snippet].each do |line| %>
+                <span class="l">
+                  <% if line[:s] == :prompt %>
+                    <span class="prompt"><%= line[:t][0] %></span><span class="cmd"><%= line[:t][1..] %></span>
+                  <% else %>
+                    <span class="<%= line[:s] %>"><%= line[:t] %></span>
+                  <% end %>
+                </span>
+              <% end %>
+            </div>
+            <p class="desc">
+              <%= flagship[:blurb] %>
+            </p>
+            <a href="<%= flagship[:url] %>" target="_blank" rel="noopener" class="cta">
+              Open <%= flagship[:name].downcase %><%= flagship[:tld] %>
+              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+              </svg>
+            </a>
+          </div>
+        </main>
+      </div>
     </div>
 
-    <!-- ── Open-source feature: currency-symbols ─────────────────────
-         Distinct from SaaS apps: language + open-source + license badges
-         on the left, install command, big download/star stats on the right. -->
+    <!-- ── Open-source feature: currency-symbols (kept below hero) ────── -->
     <div class="hero-bottom">
       <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
          class="oss-feature" aria-label="currency-symbols on PyPI — open-source library">
@@ -1430,19 +1656,6 @@
             </svg>
           </span>
         </div>
-      </a>
-
-      <a href="#shipping" class="bento-closed">
-        <span class="bento-closed-l">
-          <span class="bento-closed-num"><%= closed_apps.length %></span>
-          <span class="bento-closed-label">Retired apps · still part of the journey</span>
-        </span>
-        <span class="bento-closed-cta">
-          See archive
-          <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="transition: transform 0.2s;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-7-7l7 7-7 7"/>
-          </svg>
-        </span>
       </a>
     </div>
   </section>
