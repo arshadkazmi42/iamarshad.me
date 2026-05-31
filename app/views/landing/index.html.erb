@@ -1097,37 +1097,45 @@
   .now .desc a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .now .desc a:hover { border-color: var(--text); }
 
-  /* ── SHIPPING: mixed-span bento (Dribbble 23193374 layout) ───────────
-     4-col grid with each card carrying a span class:
-       .ship-card.span-wide  → 2 cols × 1 row
-       .ship-card.span-tall  → 1 col  × 2 rows
-       .ship-card.span-small → 1 col  × 1 row (default)
-     Cards flow into the grid in declaration order; iScan (wide), iSpy (small),
-     GhRev (tall), iSsl (small), iLink (wide), iBlockBots (wide), iWatcher (wide).
-  */
+  /* ── SHIPPING: mixed-span bento (Dribbble 23193374 layout) ─────────── */
   .ship-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 180px;
+    grid-auto-rows: 160px;
     gap: 12px;
+    grid-auto-flow: dense;
   }
   .ship-card.span-wide  { grid-column: span 2; }
   .ship-card.span-tall  { grid-row:    span 2; }
-  .ship-card.span-small { /* default 1×1 */ }
 
-  /* Compact 1×1 tile content (just header — drop the body snippet) */
-  .ship-card.span-small .ship-card-body { display: none; }
-  .ship-card.span-small .ship-card-name { font-size: 22px; }
-  .ship-card.span-small .ship-card-tag  { font-size: 10px; }
+  /* Every span variant should fill its grid cell vertically and distribute
+     content (top row + name/tag at top, blurb pushed down). */
+  .ship-grid > .ship-card {
+    height: 100%;
+    min-height: 0;                          /* override the legacy 188px min */
+    justify-content: flex-start;
+  }
+  .ship-grid > .ship-card .ship-card-blurb {
+    margin-top: auto;                       /* push to bottom of the card */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
 
-  /* Tall 1×2 tile content (bigger snippet area, header + body) */
-  .ship-card.span-tall .ship-card-name { font-size: 26px; }
-  .ship-card.span-tall .ship-card-body { padding: 16px 18px; font-size: 11px; }
+  /* 1×1 small tile: drop the blurb, shrink name+tag */
+  .ship-card.span-small .ship-card-blurb { display: none; }
+  .ship-card.span-small .ship-card-name  { font-size: 18px; }
+  .ship-card.span-small .ship-card-tag   { font-size: 10px; }
+
+  /* 1×2 tall tile: more vertical room → show fuller blurb */
+  .ship-card.span-tall .ship-card-name   { font-size: 22px; }
+  .ship-card.span-tall .ship-card-blurb  { -webkit-line-clamp: 6; }
 
   @media (max-width: 1023px) {
-    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 168px; }
-    .ship-card.span-wide { grid-column: span 2; }
-    .ship-card.span-tall { grid-row: span 1; }
+    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 158px; }
+    .ship-card.span-wide  { grid-column: span 2; }
+    .ship-card.span-tall  { grid-row: span 1; }
     .ship-card.span-small { grid-column: span 1; }
   }
   @media (max-width: 540px) {
@@ -1344,30 +1352,45 @@
   .bcard:hover .pcta { border-color: var(--pca, var(--pc)); }
   .bcard .pcta svg { width: 9px; height: 9px; }
 
-  /* ── OSS: same mixed-span bento as Shipping ─────────────────────────
-     4-col grid. Spans (declared per repo in the data array):
-       currency-symbols → tall  (1×2)  — anchors top-left, two rows
-       first-issues     → wide  (2×1)  — biggest stars
-       strix-claude-code→ wide  (2×1)  — recent + on-brand
-       rest             → small (1×1)
-     12 cells in 4×3. */
+  /* ── OSS: same mixed-span bento as Shipping ────────────────────────── */
   .oss-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 180px;
+    grid-auto-rows: 160px;
     gap: 12px;
-    grid-auto-flow: dense;          /* fill gaps left by spans */
+    grid-auto-flow: dense;
   }
   .oss-card.span-wide  { grid-column: span 2; }
   .oss-card.span-tall  { grid-row:    span 2; }
-  .oss-card.span-small { /* default 1×1 */ }
+
+  /* Every span variant fills its cell and uses space-between so the
+     downloads pill (when present) anchors to the bottom edge. */
+  .oss-grid > .oss-card {
+    height: 100%;
+    min-height: 0;                  /* override the legacy 144px min */
+    justify-content: flex-start;
+  }
+  .oss-grid > .oss-card .oss-card-blurb {
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+  .oss-grid > .oss-card .oss-card-downloads {
+    margin-top: auto;
+  }
+
+  /* 1×1 small tile: drop the blurb */
   .oss-card.span-small .oss-card-blurb { display: none; }
-  .oss-card.span-small .oss-card-name  { font-size: 13px; }
-  .oss-card.span-tall  .oss-card-name  { font-size: 18px; }
-  .oss-card.span-tall  .oss-card-blurb { font-size: 13px; }
+  .oss-card.span-small .oss-card-name  { font-size: 14px; }
+  .oss-card.span-small .oss-card-lang-pill { font-size: 9px; padding: 2px 7px; }
+
+  /* 1×2 tall tile: show more lines of blurb */
+  .oss-card.span-tall .oss-card-name  { font-size: 18px; }
+  .oss-card.span-tall .oss-card-blurb { -webkit-line-clamp: 6; font-size: 12.5px; }
 
   @media (max-width: 1023px) {
-    .oss-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+    .oss-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
     .oss-card.span-wide  { grid-column: span 2; }
     .oss-card.span-tall  { grid-row:    span 1; }
     .oss-card.span-small { grid-column: span 1; }
