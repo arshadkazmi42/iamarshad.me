@@ -227,16 +227,38 @@
   .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(124, 92, 255, 0.45); }
   @keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-  /* ── Hero: app bento grid ───────────────────────────────────────────── */
-  /* Personal identity moves to the About section; the hero is now an
-     immediate visual showcase of the 9 SaaS apps Arshad has shipped. */
+  /* ── Hero: personal identity (photo, name, tagline, chips, socials) ── */
   .hero {
     padding: 110px 24px 50px;
-    max-width: 920px; margin: 0 auto;
+    max-width: 820px; margin: 0 auto;
     text-align: center;
+    display: flex; flex-direction: column; align-items: center;
   }
-  .hero-intro {
-    margin-bottom: 28px;
+  /* Hero avatar with rotating conic-gradient ring */
+  .hero-photo-wrap {
+    position: relative; width: 88px; height: 88px;
+    margin: 0 auto 20px;
+    animation: fadeUp 0.7s 0.0s ease-out both;
+  }
+  .hero-photo-wrap::before {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    background: conic-gradient(from 0deg,
+      var(--glow1), var(--glow2), var(--glow3), var(--glow4), var(--glow1));
+    opacity: 0.5; filter: blur(11px);
+    animation: spin 20s linear infinite;
+  }
+  .hero-photo {
+    position: relative; width: 100%; height: 100%; border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.18);
+    background: var(--bg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .hero-photo-status {
+    position: absolute; bottom: 2px; right: 2px; z-index: 2;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--green); border: 2.5px solid var(--bg);
+    box-shadow: 0 0 8px var(--green);
   }
   .hero-eyebrow {
     display: inline-flex; align-items: center; gap: 7px;
@@ -245,7 +267,7 @@
     padding: 5px 13px; border-radius: 999px;
     border: 1px solid rgba(251, 191, 36, 0.22);
     background: rgba(251, 191, 36, 0.06);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     animation: fadeUp 0.7s 0.06s ease-out both;
   }
   .hero-eyebrow .dot {
@@ -253,13 +275,10 @@
     background: var(--glow4); box-shadow: 0 0 8px var(--glow4);
     animation: pulseDot 2s infinite ease-in-out;
   }
-  .hero {
-    max-width: 1080px;
-  }
   .hero h1 {
-    font-size: clamp(38px, 6.5vw, 68px); font-weight: 900;
+    font-size: clamp(36px, 5.5vw, 58px); font-weight: 900;
     line-height: 1.02; letter-spacing: -0.035em;
-    max-width: 820px; margin: 0 auto 14px;
+    max-width: 720px; margin: 0 auto 16px;
     animation: fadeUp 0.8s 0.08s ease-out both;
   }
   /* Subtle dotted grid behind the hero — adds texture without competing */
@@ -285,12 +304,33 @@
     50%      { background-position: 100% 50%; }
   }
   .hero-sub {
-    font-size: clamp(13px, 1.6vw, 15px); color: var(--muted);
-    max-width: 480px; line-height: 1.6; margin: 0 auto;
+    font-size: clamp(14px, 1.7vw, 17px); color: var(--muted);
+    max-width: 580px; line-height: 1.65; margin: 0 auto 26px;
     animation: fadeUp 0.8s 0.16s ease-out both;
   }
+  .hero-sub strong { color: var(--text); font-weight: 600; }
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
+
+  /* Identity chips row */
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    margin-bottom: 22px;
+    animation: fadeUp 0.8s 0.24s ease-out both;
+  }
+  .meta-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 500; color: var(--muted);
+    padding: 5px 11px; border-radius: 999px;
+    background: rgba(255,255,255,0.025); border: 1px solid var(--line);
+  }
+  .meta-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Hero socials row */
+  .hero-socials {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    animation: fadeUp 0.8s 0.32s ease-out both;
+  }
 
   /* ── Hero: VS Code-style window (sidebar + editor) ───────────────────
      The whole hero is one window. Sidebar lists every app as a file
@@ -1517,145 +1557,52 @@
     <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="nav-cta">Say hi</a>
   </nav>
 
-  <!-- ─────────────────────────── HERO (app bento) ──────────────────────── -->
-  <!-- Hero is now an immediate visual showcase of the 9 SaaS apps Arshad
-       has shipped. Personal identity (photo, name, role, socials) lives
-       in the About section near the bottom of the page. -->
+  <!-- ─────────────────────────── HERO (personal) ────────────────────── -->
+  <!-- Original hero: photo, name, tagline, identity chips, social links.
+       Apps are showcased in the Shipping section below; OSS lib lives
+       in the OSS section. -->
   <section id="top" class="hero">
-    <div class="hero-intro">
-      <span class="hero-eyebrow">
-        <span class="dot"></span> Built solo · Berlin · 7 live · 5 retired
-      </span>
-      <h1>
-        9 SaaS apps. <span class="gr">All shipped solo.</span>
-      </h1>
-      <p class="hero-sub">
-        Each one started as a tool I needed myself. Click any to open it. <a href="#about">more about me ↓</a>
-      </p>
+    <div class="hero-photo-wrap">
+      <img class="hero-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="eager" decoding="async" width="88" height="88">
+      <span class="hero-photo-status" title="online · in Berlin"></span>
     </div>
 
-    <!-- ── Hero: VS Code-style window. Sidebar lists every app as a
-         file (grouped by status); editor area opens the flagship. -->
-    <% flagship = live_apps.first %>
-    <div class="vscode-hero">
-      <div class="vscode-chrome">
-        <span class="vscode-lights"><span></span><span></span><span></span></span>
-        <span class="vscode-title">~/projects · iam.today  —  apps.code-workspace</span>
-      </div>
-      <div class="vscode-body">
-        <aside class="vscode-sidebar" aria-label="App index">
-          <div class="vscode-section">
-            <div class="vscode-section-label">
-              <span class="chev">▼</span> Live <span class="count">(<%= live_apps.length %>)</span>
-            </div>
-            <% live_apps.each_with_index do |app, i| %>
-              <a class="vscode-file<%= ' is-active' if i == 0 %>"
-                 href="<%= app[:url] %>" target="_blank" rel="noopener"
-                 style="--pc: <%= app[:color] %>;">
-                <span class="vscode-file-mark"></span>
-                <span><%= app[:name].downcase %><%= app[:tld] %></span>
-              </a>
-            <% end %>
-          </div>
-
-          <div class="vscode-section">
-            <div class="vscode-section-label">
-              <span class="chev">▼</span> Open-source <span class="count">(1)</span>
-            </div>
-            <a class="vscode-file is-oss"
-               href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener">
-              <span class="vscode-file-mark"></span>
-              <span>currency-symbols</span>
-            </a>
-          </div>
-
-          <div class="vscode-section">
-            <div class="vscode-section-label">
-              <span class="chev">▼</span> Retired <span class="count">(<%= closed_apps.length %>)</span>
-            </div>
-            <% closed_apps.each do |app| %>
-              <a class="vscode-file is-closed" href="#shipping">
-                <span class="vscode-file-mark"></span>
-                <span><%= app[:name].downcase %><%= app[:tld] %></span>
-              </a>
-            <% end %>
-          </div>
-        </aside>
-
-        <main class="vscode-editor" style="--pc: <%= flagship[:color] %>;">
-          <div class="vscode-tabs">
-            <span class="vscode-tab">
-              <span class="dot"></span>
-              <%= flagship[:name].downcase %><%= flagship[:tld] %>
-              <span class="x">×</span>
-            </span>
-          </div>
-          <div class="vscode-content">
-            <h2 class="h1"><%= flagship[:name] %><span class="tld"><%= flagship[:tld] %></span></h2>
-            <div class="tag"><%= flagship[:tag] %></div>
-            <div class="term-block" aria-hidden="true">
-              <% flagship[:snippet].each do |line| %>
-                <span class="l">
-                  <% if line[:s] == :prompt %>
-                    <span class="prompt"><%= line[:t][0] %></span><span class="cmd"><%= line[:t][1..] %></span>
-                  <% else %>
-                    <span class="<%= line[:s] %>"><%= line[:t] %></span>
-                  <% end %>
-                </span>
-              <% end %>
-            </div>
-            <p class="desc">
-              <%= flagship[:blurb] %>
-            </p>
-            <a href="<%= flagship[:url] %>" target="_blank" rel="noopener" class="cta">
-              Open <%= flagship[:name].downcase %><%= flagship[:tld] %>
-              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-              </svg>
-            </a>
-          </div>
-        </main>
-      </div>
+    <div class="hero-eyebrow">
+      <span class="dot"></span> Berlin · Built solo
     </div>
 
-    <!-- ── Open-source feature: currency-symbols (kept below hero) ────── -->
-    <div class="hero-bottom">
-      <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
-         class="oss-feature" aria-label="currency-symbols on PyPI — open-source library">
-        <div class="oss-feature-left">
-          <div class="oss-badges">
-            <span class="oss-badge python">
-              <svg viewBox="0 0 24 24"><path d="M14.31 0c.83 0 1.51.67 1.51 1.5v3a1.5 1.5 0 01-1.5 1.5h-4.62a1.5 1.5 0 00-1.5 1.5V9h7.62a1.5 1.5 0 011.5 1.5v6a1.5 1.5 0 01-1.5 1.5h-1.5v-1.5a3 3 0 00-3-3H8.69a3 3 0 01-3-3V4.5a1.5 1.5 0 011.5-1.5h4.62a1.5 1.5 0 011.5-1.5V0zm-3.94 2.25a.94.94 0 110 1.87.94.94 0 010-1.87z" opacity=".75"/></svg>
-              Python
-            </span>
-            <span class="oss-badge opensource">
-              <svg viewBox="0 0 24 24"><path d="M12 0L0 7l12 7 12-7-12-7zm0 8.5L3.5 6 12 1.5 20.5 6 12 8.5zM12 11l-12-7v10l12 7 12-7V4l-12 7z"/></svg>
-              Open source
-            </span>
-            <span class="oss-badge license">MIT</span>
-          </div>
-          <h3 class="oss-feature-title">currency-symbols</h3>
-          <p class="oss-feature-desc">A tiny Python library. Pass an ISO currency code, get the unicode symbol — battle-tested at almost a million installs every month.</p>
-          <div class="oss-install">
-            <span class="prompt">$</span><span class="cmd">pip install </span><span class="pkg">currency-symbols</span>
-          </div>
-        </div>
-        <div class="oss-feature-right">
-          <div class="oss-stat-block">
-            <span class="oss-stat-num" data-downloads-of="pypi/currency-symbols">—</span>
-            <span class="oss-stat-label">Downloads / month</span>
-          </div>
-          <div class="oss-stat-block">
-            <span class="oss-stat-num" data-gh-stars-of="arshadkazmi42/currency-symbols">—</span>
-            <span class="oss-stat-label">GitHub stars</span>
-          </div>
-          <span class="external">
-            pypi · github
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-            </svg>
-          </span>
-        </div>
+    <h1>
+      Hi, I'm Arshad.<br>
+      I <span class="gr">ship, hunt</span> &amp; write code.
+    </h1>
+
+    <p class="hero-sub">
+      I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
+    </p>
+
+    <div class="hero-meta">
+      <span class="meta-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
+      <span class="meta-chip"><span class="swatch" style="background: var(--glow3)"></span> Bug bounty hunter</span>
+      <span class="meta-chip"><span class="swatch" style="background: var(--glow2)"></span> SWE @ Smartly.io</span>
+      <span class="meta-chip">📍 Berlin 🇩🇪</span>
+    </div>
+
+    <div class="hero-socials">
+      <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @arshadkazmi42
+      </a>
+      <a href="https://github.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        arshadkazmi42
+      </a>
+      <a href="https://www.linkedin.com/in/arshadkazmi42" target="_blank" rel="noopener" class="social">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        arshadkazmi42
+      </a>
+      <a href="mailto:arshadkazmi42@gmail.com" class="social">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+        Email
       </a>
     </div>
   </section>
@@ -1822,49 +1769,12 @@
     </div>
   </section>
 
-  <!-- ────────────────────────── ABOUT ───────────────────────── -->
-  <!-- Holds the personal identity that used to live in the hero
-       (photo, name, role chips, social links) + the long-form story. -->
+  <!-- ────────────────────────── ABOUT (story) ────────────────────────── -->
+  <!-- Identity (photo, name, chips, socials) lives in the hero now;
+       this section is just the long-form personal note. -->
   <section id="about" class="section about reveal">
-    <div class="section-label">$ whoami</div>
-    <h2>The person behind the apps.</h2>
-
-    <div class="about-card">
-      <div class="about-photo-wrap">
-        <img class="about-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="lazy" decoding="async">
-        <span class="about-status" title="online · in Berlin"></span>
-      </div>
-      <div class="about-info">
-        <div class="name">Arshad Kazmi</div>
-        <p class="tagline">
-          I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
-        </p>
-        <div class="about-chips">
-          <span class="about-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
-          <span class="about-chip"><span class="swatch" style="background: var(--glow3)"></span> Bug bounty hunter</span>
-          <span class="about-chip"><span class="swatch" style="background: var(--glow2)"></span> SWE @ Smartly.io</span>
-          <span class="about-chip">📍 Berlin 🇩🇪</span>
-        </div>
-        <div class="about-socials">
-          <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            @arshadkazmi42
-          </a>
-          <a href="https://github.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-            arshadkazmi42
-          </a>
-          <a href="https://www.linkedin.com/in/arshadkazmi42" target="_blank" rel="noopener" class="social">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            arshadkazmi42
-          </a>
-          <a href="mailto:arshadkazmi42@gmail.com" class="social">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
-            Email
-          </a>
-        </div>
-      </div>
-    </div>
+    <div class="section-label">$ cat ~/story.md</div>
+    <h2>Why I build.</h2>
 
     <div class="about-story">
       <p>I write code for a living, then go home and write more code for fun. It looks unhealthy on paper. It feels like the opposite from the inside.</p>
