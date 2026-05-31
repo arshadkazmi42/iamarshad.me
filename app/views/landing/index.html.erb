@@ -1097,52 +1097,136 @@
   .now .desc a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .now .desc a:hover { border-color: var(--text); }
 
-  /* ── SHIPPING: mixed-span bento (Dribbble 23193374 layout) ─────────── */
-  .ship-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 160px;
-    gap: 12px;
-    grid-auto-flow: dense;
+  /* ── SHIPPING: horizontal "shelf" of cards with floating brand icons ─
+     Inspired by Dribbble 27393275 (eCommerce landing) — each card has its
+     brand-colored circular icon overflowing the top edge of the card,
+     creating a "product on a shelf" feel. Horizontal scroll + snap. */
+  .app-shelf-wrap {
+    position: relative;
+    margin: 56px -24px 0;            /* room for floating icons + break out of section padding */
   }
-  .ship-card.span-wide  { grid-column: span 2; }
-  .ship-card.span-tall  { grid-row:    span 2; }
+  .app-shelf-wrap::before,
+  .app-shelf-wrap::after {
+    content: ""; position: absolute;
+    top: 30px; bottom: 18px; width: 40px;
+    pointer-events: none; z-index: 3;
+  }
+  .app-shelf-wrap::before { left: 0;  background: linear-gradient(to right, var(--bg), transparent); }
+  .app-shelf-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
+  .app-shelf {
+    display: flex;
+    gap: 16px;
+    padding: 50px 24px 24px;          /* top padding so the overflowing icon never gets clipped */
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+  .app-shelf::-webkit-scrollbar { height: 6px; }
+  .app-shelf::-webkit-scrollbar-track { background: transparent; }
+  .app-shelf::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 
-  /* Every span variant should fill its grid cell vertically and distribute
-     content (top row + name/tag at top, blurb pushed down). */
-  .ship-grid > .ship-card {
-    height: 100%;
-    min-height: 0;                          /* override the legacy 188px min */
-    justify-content: flex-start;
+  .app-shelf-card {
+    --pc: var(--text);
+    position: relative;
+    flex: 0 0 240px;
+    min-height: 280px;
+    padding: 52px 20px 22px;          /* top padding inside card to leave space for floating icon */
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--pc) 9%, var(--surface)),
+      var(--surface) 65%);
+    border: 1px solid color-mix(in srgb, var(--pc) 20%, var(--line));
+    border-radius: 20px;
+    scroll-snap-align: start;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
-  .ship-grid > .ship-card .ship-card-blurb {
-    margin-top: auto;                       /* push to bottom of the card */
+  .app-shelf-card:hover {
+    transform: translateY(-6px);
+    border-color: color-mix(in srgb, var(--pc) 55%, var(--line));
+    box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--pc) 45%, transparent);
+  }
+
+  /* The floating icon — orbits OVER the top edge of the card */
+  .app-shelf-icon {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--pc), color-mix(in srgb, var(--pc) 55%, #000));
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow:
+      0 14px 32px -10px var(--pc),       /* brand-color drop shadow */
+      0 0 0 6px var(--bg);               /* "punch out" the card border around the icon */
+    transition: transform 0.25s ease;
+  }
+  .app-shelf-card:hover .app-shelf-icon {
+    transform: translateX(-50%) translateY(-4px) scale(1.04);
+  }
+  .app-shelf-icon svg { width: 34px; height: 34px; }
+
+  .app-shelf-arrow {
+    position: absolute;
+    top: 16px; right: 18px;
+    width: 16px; height: 16px;
+    color: rgba(255,255,255,0.35);
+    transition: color 0.2s, transform 0.2s;
+  }
+  .app-shelf-card:hover .app-shelf-arrow {
+    color: var(--pc);
+    transform: translate(2px, -2px);
+  }
+
+  .app-shelf-name {
+    font-size: 22px; font-weight: 900;
+    letter-spacing: -0.025em; line-height: 1.08;
+    color: var(--text);
+    text-align: center;
+    margin: 0 0 4px;
+  }
+  .app-shelf-name .tld { color: var(--muted); font-weight: 500; }
+  .app-shelf-tag {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--pc);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .app-shelf-blurb {
+    font-size: 12.5px; line-height: 1.5;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 16px;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     display: -webkit-box;
     overflow: hidden;
   }
-
-  /* 1×1 small tile: drop the blurb, shrink name+tag */
-  .ship-card.span-small .ship-card-blurb { display: none; }
-  .ship-card.span-small .ship-card-name  { font-size: 18px; }
-  .ship-card.span-small .ship-card-tag   { font-size: 10px; }
-
-  /* 1×2 tall tile: more vertical room → show fuller blurb */
-  .ship-card.span-tall .ship-card-name   { font-size: 22px; }
-  .ship-card.span-tall .ship-card-blurb  { -webkit-line-clamp: 6; }
-
-  @media (max-width: 1023px) {
-    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 158px; }
-    .ship-card.span-wide  { grid-column: span 2; }
-    .ship-card.span-tall  { grid-row: span 1; }
-    .ship-card.span-small { grid-column: span 1; }
+  .app-shelf-status {
+    margin-top: auto;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 5px 12px; border-radius: 999px;
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--green);
+    align-self: center;
   }
+  .app-shelf-status .live-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 6px var(--green);
+    animation: pulseDot 2s infinite;
+  }
+
   @media (max-width: 540px) {
-    .ship-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-    .ship-card.span-wide, .ship-card.span-tall, .ship-card.span-small {
-      grid-column: span 1; grid-row: span 1; min-height: 140px;
-    }
+    .app-shelf-card { flex: 0 0 82vw; }
   }
   .ship-card {
     --pc: var(--text);
@@ -1721,6 +1805,47 @@
     </div>
   </section>
 
+  <!-- ───────────────────────── SHIPPING (sliding shelf) ──────────────────
+       Inspired by the Dribbble eCommerce reference (27393275). Each app is
+       a "product on a shelf" — its brand-colored icon floats above the card,
+       cards scroll horizontally, swipe/scroll to see them all. -->
+  <section id="shipping" class="section reveal">
+    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects</div>
+    <h2>Things I've shipped.</h2>
+    <p class="section-sub">Swipe through the 7 live apps. Each one came from an itch I had to scratch myself.</p>
+
+    <div class="app-shelf-wrap">
+      <div class="app-shelf">
+        <% live_apps.each do |app| %>
+          <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+             class="app-shelf-card" style="--pc: <%= app[:color] %>;">
+            <span class="app-shelf-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="<%= app[:icon] %>"/>
+              </svg>
+            </span>
+            <svg class="app-shelf-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+            </svg>
+            <h3 class="app-shelf-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></h3>
+            <div class="app-shelf-tag"><%= app[:tag] %></div>
+            <p class="app-shelf-blurb"><%= app[:blurb] %></p>
+            <span class="app-shelf-status"><span class="live-dot"></span> Live</span>
+          </a>
+        <% end %>
+      </div>
+    </div>
+
+    <% if closed_apps.any? %>
+      <div class="ship-archive">
+        <span class="ship-archive-label">Also built · since retired:</span>
+        <% closed_apps.each_with_index do |app, i| %>
+          <span class="ship-archive-name" title="<%= app[:tag] %>"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></span><% if i < closed_apps.length - 1 %><span class="ship-archive-sep">·</span><% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
   <!-- ───────────────────── MARQUEE STATS ────────────────────── -->
   <!-- All numbers fetched live from GitHub at page load (see <script> at bottom). -->
   <!-- App count is auto-derived from the `shipping` array so it updates with the data. -->
@@ -1775,46 +1900,6 @@
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- ───────────────────────── SHIPPING ──────────────────────── -->
-  <!-- Full apps list (live + closed). The hero highlights the live ones;
-       this section is the comprehensive view, including the 5 retired apps. -->
-  <section id="shipping" class="section reveal">
-    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects --all</div>
-    <h2>Things I've shipped.</h2>
-    <p class="section-sub">All 12 — what's live in production and what's been retired.</p>
-
-    <!-- Mixed-span bento: 7 live SaaS apps. Each app's `span` field controls
-         its size: wide (2×1), tall (1×2), small (1×1). Layout mirrors the
-         Dribbble bento shot the user pointed at. -->
-    <div class="ship-grid">
-      <% live_apps.each do |app| %>
-        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="ship-card span-<%= app[:span] || 'small' %>"
-           style="--pc: <%= app[:color] %>;">
-          <div class="ship-card-top">
-            <span class="badge-live"><span class="ld"></span> Live</span>
-            <span class="ship-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-            </span>
-          </div>
-          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="ship-card-tag"><%= app[:tag] %></div>
-          <p class="ship-card-blurb"><%= app[:blurb] %></p>
-        </a>
-      <% end %>
-    </div>
-
-    <!-- Retired apps as a simple inline strip below the bento. -->
-    <% if closed_apps.any? %>
-      <div class="ship-archive">
-        <span class="ship-archive-label">Also built · since retired:</span>
-        <% closed_apps.each_with_index do |app, i| %>
-          <span class="ship-archive-name" title="<%= app[:tag] %>"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></span><% if i < closed_apps.length - 1 %><span class="ship-archive-sep">·</span><% end %>
-        <% end %>
-      </div>
-    <% end %>
   </section>
 
   <!-- ───────────────────────── BOUNTY ────────────────────────── -->
