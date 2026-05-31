@@ -8,15 +8,32 @@
   # `tag` is the one-word category that sits between the name and the longer blurb.
   # `status` is :live (currently shipping) or :closed (retired — the app no longer runs).
   # Closed apps stay in the portfolio to show honest history — the cards are non-clickable.
+  # `icon` is an SVG path (Heroicons outline, 24-viewBox) rendered as a
+  # large faded watermark in the bottom-right of each app's bento tile —
+  # gives every tile a thematic visual instead of just a colored rectangle.
   shipping = [
     # ── live ───────────────────────────────────────────────────────────
-    { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff", blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
-    { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee", blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
-    { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d", blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
-    { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399", blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
-    { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def", blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
-    { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185", blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
-    { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6", blurb: "Paste any GitHub access token and instantly see exactly what it unlocks.",                              status: :live },
+    { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff",
+      icon: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
+      blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
+    { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee",
+      icon: 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+      blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
+    { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d",
+      icon: 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
+      blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
+    { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399",
+      icon: 'M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244',
+      blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
+    { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def",
+      icon: 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
+      blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
+    { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185",
+      icon: 'M9.75 9.75 14.25 14.25m0-4.5L9.75 14.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+      blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
+    { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6",
+      icon: 'M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z',
+      blurb: "Paste any GitHub access token and instantly see exactly what it unlocks.",                              status: :live },
 
     # ── closed / retired ───────────────────────────────────────────────
     { name: "iMrr",       tld: ".today", url: nil, tag: "MRR leaderboard",    color: "#a78bfa", blurb: "Free MRR leaderboard for indie SaaS and small businesses. Ran for a year before retiring it.",         status: :closed },
@@ -293,11 +310,13 @@
   }
   .bento-tile:hover::before { opacity: 1; }
 
-  /* App tiles — solid brand-color gradient, white text */
+  /* App tiles — solid brand-color gradient + radial highlight + icon watermark */
   .bento-app {
-    background: linear-gradient(140deg,
-      color-mix(in srgb, var(--pc) 78%, transparent),
-      color-mix(in srgb, var(--pc) 38%, var(--bg)));
+    background:
+      radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--pc) 95%, white 6%) 0%, transparent 60%),
+      linear-gradient(150deg,
+        color-mix(in srgb, var(--pc) 70%, transparent),
+        color-mix(in srgb, var(--pc) 22%, var(--bg)));
     border-color: color-mix(in srgb, var(--pc) 45%, transparent);
   }
   .bento-app::after {
@@ -306,6 +325,31 @@
     width: 140px; height: 140px; border-radius: 50%;
     background: var(--pc); opacity: 0.32;
     filter: blur(45px); pointer-events: none;
+  }
+  /* Icon watermark — large faded SVG anchored bottom-right,
+     intensifies + drifts on hover for character */
+  .bento-app-icon {
+    position: absolute;
+    right: -22px; bottom: -22px;
+    width: 110px; height: 110px;
+    color: rgba(255, 255, 255, 0.13);
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.35s ease, color 0.35s ease;
+  }
+  .bento-app-icon svg { width: 100%; height: 100%; }
+  .bento-app:hover .bento-app-icon {
+    color: rgba(255, 255, 255, 0.22);
+    transform: translate(-4px, -4px) rotate(-6deg);
+  }
+  .bento-feature .bento-app-icon {
+    right: -28px; bottom: -28px;
+    width: 160px; height: 160px;
+    color: rgba(255, 255, 255, 0.1);
+  }
+  .bento-feature:hover .bento-app-icon {
+    color: rgba(255, 255, 255, 0.18);
+    transform: translate(-6px, -6px) rotate(-5deg);
   }
   .bento-app:hover {
     box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--pc) 55%, transparent);
@@ -346,34 +390,77 @@
     color: rgba(255,255,255,0.8);
   }
 
-  /* Stat tile — sits in the middle of the grid, neutral, info-rich */
-  .bento-stat {
-    cursor: default;
-    align-items: center; justify-content: center; text-align: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.02);
-    border-style: dashed;
+  /* Package tile — highlight an OSS package with live download count.
+     Currently used for `currency-symbols` (931k+ monthly downloads). */
+  .bento-package {
+    background:
+      radial-gradient(circle at 85% 15%, rgba(34, 211, 238, 0.45) 0%, transparent 60%),
+      linear-gradient(150deg, rgba(14, 116, 144, 0.65), rgba(8, 47, 73, 0.7));
+    border-color: rgba(34, 211, 238, 0.4);
+    color: #fff;
   }
-  .bento-stat:hover { transform: none; border-color: var(--line); }
-  .bento-stat-label {
-    font-size: 9px; font-weight: 700;
+  .bento-package::after {
+    content: ""; position: absolute;
+    bottom: -48px; right: -48px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: #22d3ee; opacity: 0.28;
+    filter: blur(45px); pointer-events: none;
+  }
+  .bento-package:hover {
+    border-color: rgba(34, 211, 238, 0.75);
+    box-shadow: 0 18px 40px -12px rgba(34, 211, 238, 0.45);
+  }
+  .bento-package-top {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .bento-package-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 9px; font-weight: 800;
     letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--muted);
+    color: #67e8f9;
+    padding: 3px 8px; border-radius: 999px;
+    background: rgba(34, 211, 238, 0.12);
+    border: 1px solid rgba(34, 211, 238, 0.3);
   }
-  .bento-stat-row {
-    display: flex; gap: 16px; align-items: flex-start;
+  .bento-package-top .arrow {
+    width: 16px; height: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: transform 0.2s, color 0.2s;
   }
-  .bento-stat-row > div { text-align: center; }
-  .bento-stat-row .num {
-    font-size: 26px; font-weight: 900;
-    background: linear-gradient(135deg, var(--glow1), var(--glow2));
+  .bento-package:hover .arrow {
+    color: #fff;
+    transform: translate(2px, -2px);
+  }
+  .bento-package-main {
+    position: relative; z-index: 1;
+  }
+  .bento-package-num {
+    font-size: 38px; font-weight: 900;
+    letter-spacing: -0.035em; line-height: 1;
+    background: linear-gradient(135deg, #a5f3fc, #67e8f9 60%, #22d3ee);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: -0.03em; line-height: 1;
   }
-  .bento-stat-row .sub {
-    font-size: 9px; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); margin-top: 5px;
+  .bento-package-suffix {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(165, 243, 252, 0.7);
+    margin-top: 5px;
+  }
+  .bento-package-name {
+    position: relative; z-index: 1;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; color: rgba(255, 255, 255, 0.65);
+  }
+  /* Python language watermark for the currency-symbols tile */
+  .bento-package::before {
+    content: ""; position: absolute;
+    right: -18px; bottom: -18px;
+    width: 100px; height: 100px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff' opacity='0.1'%3E%3Cpath d='M9.9 2C7.6 2 5.7 3.9 5.7 6.2v3.1h4.2v.6H3.7C1.4 9.9 0 11.8 0 14.1v3.7c0 2.3 1.9 4.2 4.2 4.2h2.6v-3.4c0-2.3 1.9-4.2 4.2-4.2h7.3c1.8 0 3.3-1.5 3.3-3.3V6.2C21.6 3.9 19.7 2 17.4 2H9.9zm-2.6 1.8c.7 0 1.3.6 1.3 1.3s-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3.6-1.3 1.3-1.3z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none; z-index: 0;
   }
 
   /* Closed tile — link to the full archive */
@@ -998,6 +1085,11 @@
         <% featured = (i == 0) %>
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
            class="bento-tile bento-app<%= ' bento-feature' if featured %>" style="--pc: <%= app[:color] %>;">
+          <span class="bento-app-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="<%= app[:icon] %>"/>
+            </svg>
+          </span>
           <div class="bento-app-top">
             <span class="live-dot" title="live"></span>
             <% if featured %>
@@ -1009,7 +1101,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
             </svg>
           </div>
-          <div>
+          <div style="position: relative; z-index: 1;">
             <div class="bento-app-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
             <div class="bento-app-tag"><%= app[:tag] %></div>
             <% if featured %>
@@ -1018,15 +1110,26 @@
           </div>
         </a>
         <% if i == 4 %>
-          <!-- Stat tile sits naturally below the featured tile (col 1, row 3). -->
-          <div class="bento-tile bento-stat" aria-label="At-a-glance numbers">
-            <div class="bento-stat-label">By the numbers</div>
-            <div class="bento-stat-row">
-              <div><div class="num"><%= shipping.length %></div><div class="sub">Built</div></div>
-              <div><div class="num"><%= live_apps.length %></div><div class="sub">Live</div></div>
-              <div><div class="num"><span data-gh-stat="public_repos">—</span></div><div class="sub">Repos</div></div>
+          <!-- Highlighted OSS package: currency-symbols. ~931k monthly
+               PyPI downloads, live-fetched via shields.io (same wiring
+               as the OSS section's download pills). -->
+          <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
+             class="bento-tile bento-package">
+            <div class="bento-package-top">
+              <span class="bento-package-label">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg>
+                PyPI · Open source
+              </span>
+              <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+              </svg>
             </div>
-          </div>
+            <div class="bento-package-main">
+              <div class="bento-package-num" data-downloads-of="pypi/currency-symbols">—</div>
+              <div class="bento-package-suffix">downloads / month</div>
+            </div>
+            <div class="bento-package-name">currency-symbols</div>
+          </a>
         <% end %>
       <% end %>
 
@@ -1357,8 +1460,10 @@
         .then(function (d) {
           if (!d || !d.message) return;
           var num = d.message.replace(/\/month$/i, "").trim();
+          // OSS card has a child .num; bento-package tile uses textContent directly.
           var inner = el.querySelector(".num");
           if (inner) inner.textContent = num;
+          else el.textContent = num;
         })
         .catch(function () { /* leave placeholder */ });
     });
