@@ -196,11 +196,23 @@
     animation: pulseDot 2s infinite ease-in-out;
   }
   .hero h1 {
-    font-size: clamp(28px, 4.6vw, 48px); font-weight: 900;
-    line-height: 1.05; letter-spacing: -0.03em;
-    max-width: 740px; margin: 0 auto 10px;
+    font-size: clamp(38px, 6.5vw, 68px); font-weight: 900;
+    line-height: 1.02; letter-spacing: -0.035em;
+    max-width: 820px; margin: 0 auto 14px;
     animation: fadeUp 0.8s 0.08s ease-out both;
   }
+  /* Subtle dotted grid behind the hero — adds texture without competing */
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 55% at center, black 25%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 55% at center, black 25%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero { position: relative; }
   .hero h1 .gr {
     background: linear-gradient(135deg, var(--glow1) 0%, var(--glow2) 30%, var(--glow3) 60%, var(--glow4) 100%);
     background-size: 200% 200%;
@@ -219,28 +231,67 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Bento grid: 3x3 mix of app/stat/closed tiles ────────────────────── */
+  /* ── Bento grid: asymmetric 4×3 with one 2×2 featured tile ──────────── */
   .bento-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 148px;
     gap: 12px;
-    margin-top: 22px;
+    margin-top: 24px;
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
   .bento-tile {
     --pc: var(--text);
+    --mx: 50%; --my: 50%;
     position: relative; overflow: hidden;
     display: flex; flex-direction: column; justify-content: space-between;
-    padding: 18px;
+    padding: 16px;
     border-radius: 18px;
     border: 1px solid var(--line);
     background: var(--surface);
     text-decoration: none;
     transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-    min-height: 168px;
     text-align: left;
   }
   .bento-tile:hover { transform: translateY(-3px); }
+
+  /* Featured 2×2 tile — gets prominence in the grid (iScan) */
+  .bento-feature {
+    grid-column: span 2;
+    grid-row: span 2;
+    padding: 22px;
+  }
+  .bento-feature .bento-app-name {
+    font-size: clamp(28px, 4.2vw, 44px);
+  }
+  .bento-feature .bento-app-tag {
+    font-size: 11px;
+    margin-top: 8px;
+  }
+  .bento-feature .featured-desc {
+    margin-top: 14px;
+    font-size: 13.5px; line-height: 1.55;
+    color: rgba(255,255,255,0.86);
+    max-width: 320px;
+  }
+  .bento-feature .featured-star {
+    width: 14px; height: 14px;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* Mouse-follow spotlight overlay — premium "depth" cue on every tile.
+     JS updates --mx / --my via mousemove. */
+  .bento-tile::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle 240px at var(--mx) var(--my),
+                rgba(255,255,255,0.12), transparent 55%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 3;
+    mix-blend-mode: overlay;
+  }
+  .bento-tile:hover::before { opacity: 1; }
 
   /* App tiles — solid brand-color gradient, white text */
   .bento-app {
@@ -362,11 +413,15 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 760px) {
-    .bento-grid { grid-template-columns: repeat(2, 1fr); }
-    .bento-tile { min-height: 140px; }
+    .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 132px; }
+    .bento-feature { grid-column: span 2; grid-row: span 1; }
+    .bento-feature .bento-app-name { font-size: 28px; }
+    .bento-feature .featured-desc { display: none; }
   }
   @media (max-width: 460px) {
-    .bento-grid { grid-template-columns: 1fr; }
+    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .bento-tile { min-height: 120px; }
+    .bento-feature { grid-column: span 1; }
   }
 
   /* Shared .social pill style — still used by the About section below */
@@ -940,10 +995,16 @@
 
     <div class="bento-grid">
       <% live_apps.each_with_index do |app, i| %>
+        <% featured = (i == 0) %>
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="bento-tile bento-app" style="--pc: <%= app[:color] %>;">
+           class="bento-tile bento-app<%= ' bento-feature' if featured %>" style="--pc: <%= app[:color] %>;">
           <div class="bento-app-top">
             <span class="live-dot" title="live"></span>
+            <% if featured %>
+              <svg class="featured-star" fill="currentColor" viewBox="0 0 24 24" aria-label="flagship">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>
+              </svg>
+            <% end %>
             <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
             </svg>
@@ -951,10 +1012,13 @@
           <div>
             <div class="bento-app-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
             <div class="bento-app-tag"><%= app[:tag] %></div>
+            <% if featured %>
+              <p class="featured-desc"><%= app[:blurb] %></p>
+            <% end %>
           </div>
         </a>
-        <% if i == 3 %>
-          <!-- Center tile of the 3×3 grid: live numbers, not an app. -->
+        <% if i == 4 %>
+          <!-- Stat tile sits naturally below the featured tile (col 1, row 3). -->
           <div class="bento-tile bento-stat" aria-label="At-a-glance numbers">
             <div class="bento-stat-label">By the numbers</div>
             <div class="bento-stat-row">
@@ -966,7 +1030,7 @@
         <% end %>
       <% end %>
 
-      <!-- Last cell: link to the full archive (includes the 5 retired apps). -->
+      <!-- Archive link as the last cell. -->
       <a href="#shipping" class="bento-tile bento-closed">
         <div>
           <div class="bento-closed-num"><%= closed_apps.length %></div>
@@ -974,43 +1038,6 @@
         </div>
         <span class="bento-closed-cta">See archive →</span>
       </a>
-    </div>
-  </section>
-
-  <!-- ───────────────────────── SHIPPING ──────────────────────── -->
-  <!-- Surfaced immediately below the hero — "what I make" is the headline value of the site. -->
-  <section id="shipping" class="section reveal" style="padding-top: 60px;">
-    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects</div>
-    <h2>Things I've shipped.</h2>
-    <p class="section-sub">Small, focused, mostly built for hackers and indie founders.</p>
-
-    <div class="ship-grid">
-      <% shipping.each do |app| %>
-        <% closed = app[:status] == :closed %>
-        <% tag    = closed ? :div : :a %>
-        <%= content_tag(tag,
-              {
-                class: "ship-card#{' is-closed' if closed}",
-                style: "--pc: #{app[:color]};",
-                href:   (app[:url] unless closed),
-                target: ('_blank' unless closed),
-                rel:    ('noopener' unless closed),
-              }.compact) do %>
-          <div class="ship-card-top">
-            <% if closed %>
-              <span class="badge-closed"><span class="ld"></span> Closed</span>
-            <% else %>
-              <span class="badge-live"><span class="ld"></span> Live</span>
-              <span class="ship-arrow">
-                <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-              </span>
-            <% end %>
-          </div>
-          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="ship-card-tag"><%= app[:tag] %></div>
-          <p class="ship-card-blurb"><%= app[:blurb] %></p>
-        <% end %>
-      <% end %>
     </div>
   </section>
 
@@ -1067,6 +1094,44 @@
           <div class="desc">Building the platform that powers paid social for the world's biggest brands. Berlin office, distributed team.</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── SHIPPING ──────────────────────── -->
+  <!-- Full apps list (live + closed). The hero highlights the live ones;
+       this section is the comprehensive view, including the 5 retired apps. -->
+  <section id="shipping" class="section reveal">
+    <div class="section-label" style="color: var(--glow2);">$ ls ~/projects --all</div>
+    <h2>Things I've shipped.</h2>
+    <p class="section-sub">All 12 — what's live in production and what's been retired.</p>
+
+    <div class="ship-grid">
+      <% shipping.each do |app| %>
+        <% closed = app[:status] == :closed %>
+        <% tag    = closed ? :div : :a %>
+        <%= content_tag(tag,
+              {
+                class: "ship-card#{' is-closed' if closed}",
+                style: "--pc: #{app[:color]};",
+                href:   (app[:url] unless closed),
+                target: ('_blank' unless closed),
+                rel:    ('noopener' unless closed),
+              }.compact) do %>
+          <div class="ship-card-top">
+            <% if closed %>
+              <span class="badge-closed"><span class="ld"></span> Closed</span>
+            <% else %>
+              <span class="badge-live"><span class="ld"></span> Live</span>
+              <span class="ship-arrow">
+                <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+              </span>
+            <% end %>
+          </div>
+          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+          <div class="ship-card-tag"><%= app[:tag] %></div>
+          <p class="ship-card-blurb"><%= app[:blurb] %></p>
+        <% end %>
+      <% end %>
     </div>
   </section>
 
@@ -1265,6 +1330,21 @@
         })
         .catch(function () { /* leave placeholder */ });
     });
+
+    // ── Bento mouse-follow spotlight ──────────────────────────────────
+    // Each tile carries a radial-gradient overlay that follows the cursor
+    // (driven by --mx / --my CSS vars updated on mousemove). Skipped if
+    // prefers-reduced-motion is set.
+    (function () {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('.bento-tile').forEach(function (tile) {
+        tile.addEventListener('mousemove', function (e) {
+          var r = tile.getBoundingClientRect();
+          tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          tile.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
+    })();
 
     // ── Package download counts (PyPI / npm) via shields.io ────────────
     // shields.io is CORS-enabled. Endpoint: img.shields.io/<registry>/dm/<pkg>.json
