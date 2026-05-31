@@ -1087,13 +1087,53 @@
   .now .desc a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .now .desc a:hover { border-color: var(--text); }
 
-  /* ── SHIPPING: 3-col grid of rich product cards ──────────────────────── */
-  /* Each card carries its app's brand color in --pc (set inline via style=).
-     Hover deepens the glow + brings up the colored accent bar at the bottom. */
+  /* ── SHIPPING: horizontal-scroll showcase (Apple Today / Netflix tile) ──
+     Cards flow left-to-right in a single track; scroll/swipe to reveal more.
+     Snap-scroll for satisfying drag. Gradient fade at both edges signals
+     overflow. Same `.ship-card` content as before, just laid out as a band. */
+  .ship-rail-wrap {
+    position: relative;
+    margin: 0 -24px;             /* break out of the section's 24px padding */
+  }
+  .ship-rail-wrap::before,
+  .ship-rail-wrap::after {
+    content: ""; position: absolute;
+    top: 0; bottom: 16px; width: 40px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .ship-rail-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+  }
+  .ship-rail-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+  }
   .ship-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: visible;          /* allow hover lift */
+    padding: 6px 24px 18px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ship-grid::-webkit-scrollbar { height: 6px; }
+  .ship-grid::-webkit-scrollbar-track { background: transparent; }
+  .ship-grid::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+  }
+  .ship-grid > .ship-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+    min-height: 230px;
+  }
+  @media (max-width: 540px) {
+    .ship-grid > .ship-card { flex: 0 0 86vw; }
   }
   .ship-card {
     --pc: var(--text);
@@ -1280,12 +1320,41 @@
   .bcard:hover .pcta { border-color: var(--pca, var(--pc)); }
   .bcard .pcta svg { width: 9px; height: 9px; }
 
-  /* ── OSS: 3-col grid of repo cards (same pattern as ship-card, lang-colored) ── */
-  /* --lc = language color, set inline per card. */
+  /* ── OSS: same horizontal-scroll showcase pattern as Shipping ──────── */
+  .oss-rail-wrap {
+    position: relative;
+    margin: 0 -24px;
+  }
+  .oss-rail-wrap::before,
+  .oss-rail-wrap::after {
+    content: ""; position: absolute;
+    top: 0; bottom: 16px; width: 40px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .oss-rail-wrap::before { left: 0;  background: linear-gradient(to right, var(--bg), transparent); }
+  .oss-rail-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
   .oss-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 6px 24px 18px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .oss-grid::-webkit-scrollbar { height: 6px; }
+  .oss-grid::-webkit-scrollbar-track { background: transparent; }
+  .oss-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  .oss-grid > .oss-card {
+    flex: 0 0 290px;
+    scroll-snap-align: start;
+    min-height: 160px;
+  }
+  @media (max-width: 540px) {
+    .oss-grid > .oss-card { flex: 0 0 82vw; }
   }
   .oss-card {
     --lc: var(--text);
@@ -1671,6 +1740,7 @@
     <h2>Things I've shipped.</h2>
     <p class="section-sub">All 12 — what's live in production and what's been retired.</p>
 
+    <div class="ship-rail-wrap">
     <div class="ship-grid">
       <% shipping.each do |app| %>
         <% closed = app[:status] == :closed %>
@@ -1698,6 +1768,7 @@
           <p class="ship-card-blurb"><%= app[:blurb] %></p>
         <% end %>
       <% end %>
+    </div>
     </div>
   </section>
 
@@ -1733,6 +1804,7 @@
     <h2>Open source.</h2>
     <p class="section-sub">A few of the 327 repos I've made public. Most are tiny on purpose.</p>
 
+    <div class="oss-rail-wrap">
     <div class="oss-grid">
       <% oss.each do |repo| %>
         <% link = repo[:external_url] || "https://github.com/#{repo[:repo]}" %>
@@ -1759,6 +1831,7 @@
           <% end %>
         </a>
       <% end %>
+    </div>
     </div>
 
     <div style="text-align: center;">
