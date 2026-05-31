@@ -13,8 +13,19 @@
   # gives every tile a thematic visual instead of just a colored rectangle.
   shipping = [
     # ── live ───────────────────────────────────────────────────────────
+    # `snippet` is an array of {style, text} rendered inside the flagship
+    # tile as fake terminal output — gives the card real product character
+    # instead of just a colored panel with a name.
     { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff",
       icon: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
+      snippet: [
+        { s: :prompt, t: "$ iscan --org acme" },
+        { s: :warn,   t: "⚠ FOUND  AWS_KEY   AKIA****" },
+        { s: :warn,   t: "⚠ FOUND  GH_PAT    ghp_****" },
+        { s: :warn,   t: "⚠ FOUND  STRIPE_SK sk_live_****" },
+        { s: :dim,    t: "..." },
+        { s: :ok,     t: "✓ 142 secrets caught this month" },
+      ],
       blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
     { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee",
       icon: 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
@@ -251,45 +262,198 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Hero: card-scatter (mood-board layout, NOT a grid) ─────────────
-     Each card is absolutely positioned with its own size, position and
-     rotation set inline. Cards are intentionally varied — different
-     dimensions, slight tilt — to read as a curated wall, not a directory.
-     On mobile, the absolute positioning is dropped and cards stack
-     vertically. */
-  .bento-grid {
-    position: relative;
-    width: 100%;
-    height: 720px;
+  /* ── Hero showcase: featured flagship + tight app list (no more grid) ───
+     Left column: one rich "featured" card for the flagship app (iScan),
+     containing a mock terminal output showing what the product actually does.
+     Right column: a vertical list of the remaining apps as compact rows.
+     Below the showcase: a full-width currency-symbols terminal + a closed strip. */
+  .hero-showcase {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 14px;
     margin-top: 28px;
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
-  .bento-tile {
-    --pc: var(--text);
-    --mx: 50%; --my: 50%;
-    --rot: 0deg;
-    --tx: 0px; --ty: 0px;             /* parallax offsets, updated by JS on mousemove */
-    position: absolute;               /* positions set inline per card */
-    overflow: hidden;
-    display: flex; flex-direction: column; justify-content: space-between;
-    padding: 18px;
-    border-radius: 18px;
-    border: 1px solid var(--line);
-    background: var(--surface);
-    text-decoration: none;
-    text-align: left;
-    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
-    transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.28s ease;
-    will-change: transform;
-  }
-  .bento-tile:hover {
-    transform: translate(var(--tx), calc(var(--ty) - 6px)) rotate(0deg) scale(1.025);
-    z-index: 10;
+  @media (max-width: 760px) {
+    .hero-showcase { grid-template-columns: 1fr; }
   }
 
-  /* iScan flagship — biggest card, intentionally tilted slightly. */
-  .bento-feature {
-    padding: 26px;
+  /* ── Featured card (iScan flagship) ─────────────────────────────────── */
+  .featured-card {
+    --pc: #7c5cff;
+    --mx: 50%; --my: 50%;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    background: linear-gradient(165deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    text-decoration: none;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    min-height: 480px;
+  }
+  /* Top accent bar in brand color, fading out — signature of the card */
+  .featured-card::before {
+    content: ""; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--pc) 0%, color-mix(in srgb, var(--pc) 40%, transparent) 60%, transparent 100%);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--pc) 70%, transparent);
+    z-index: 2;
+  }
+  /* Soft brand-color glow blob in the top-right */
+  .featured-card::after {
+    content: ""; position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: var(--pc); opacity: 0.16;
+    filter: blur(60px); pointer-events: none;
+  }
+  .featured-card:hover {
+    border-color: color-mix(in srgb, var(--pc) 45%, var(--line));
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -14px color-mix(in srgb, var(--pc) 35%, transparent);
+  }
+  /* Spotlight cursor overlay — same recipe as the OSS cards */
+  .featured-card .spotlight {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle 280px at var(--mx) var(--my), rgba(255,255,255,0.07), transparent 55%);
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.35s; z-index: 1;
+  }
+  .featured-card:hover .spotlight { opacity: 1; }
+
+  .featured-head {
+    padding: 26px 26px 0;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    position: relative; z-index: 2;
+  }
+  .featured-head .crown {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--pc);
+    padding: 4px 10px; border-radius: 999px;
+    background: color-mix(in srgb, var(--pc) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent);
+  }
+  .featured-head .crown svg { width: 11px; height: 11px; fill: currentColor; }
+  .featured-head .arrow {
+    width: 16px; height: 16px;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+  .featured-card:hover .featured-head .arrow {
+    color: var(--pc);
+    transform: translate(2px, -2px);
+  }
+  .featured-name {
+    position: relative; z-index: 2;
+    padding: 14px 26px 4px;
+    font-size: clamp(36px, 4.6vw, 52px); font-weight: 900;
+    letter-spacing: -0.03em; line-height: 1;
+    color: var(--text);
+  }
+  .featured-name .tld { color: var(--muted); font-weight: 500; }
+  .featured-tag {
+    position: relative; z-index: 2;
+    padding: 0 26px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--pc);
+  }
+  /* Mock-terminal snippet inside the featured card — the "what it does" hook */
+  .featured-snippet {
+    position: relative; z-index: 2;
+    margin: 18px 26px;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12.5px; line-height: 1.65;
+    overflow: hidden;
+  }
+  .featured-snippet .l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .featured-snippet .prompt { color: rgba(255,255,255,0.4); margin-right: 6px; }
+  .featured-snippet .cmd    { color: rgba(255,255,255,0.9); }
+  .featured-snippet .warn   { color: #fbbf24; }
+  .featured-snippet .ok     { color: #34d399; }
+  .featured-snippet .dim    { color: rgba(255,255,255,0.3); }
+  .featured-blurb {
+    position: relative; z-index: 2;
+    padding: 0 26px 22px;
+    font-size: 13.5px; line-height: 1.55;
+    color: var(--muted);
+    margin-top: auto;
+  }
+  .featured-blurb strong { color: var(--text); font-weight: 600; }
+
+  /* ── App list (right column) ────────────────────────────────────────── */
+  .app-list {
+    display: flex; flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 480px;
+  }
+  .app-list-row {
+    --pc: var(--text);
+    flex: 1;
+    display: flex; align-items: center;
+    padding: 16px 20px;
+    gap: 14px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s, padding-left 0.25s;
+    position: relative;
+  }
+  .app-list-row::before {
+    content: ""; position: absolute;
+    top: 0; left: 0; bottom: 0; width: 2px;
+    background: var(--pc); opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .app-list-row:last-child { border-bottom: none; }
+  .app-list-row:hover {
+    background: color-mix(in srgb, var(--pc) 8%, transparent);
+    padding-left: 26px;
+  }
+  .app-list-row:hover::before { opacity: 1; }
+  .app-list-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--pc);
+    box-shadow: 0 0 10px var(--pc);
+    flex-shrink: 0;
+  }
+  .app-list-info { flex: 1; min-width: 0; }
+  .app-list-name {
+    font-size: 17px; font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .app-list-name .tld { color: var(--muted); font-weight: 500; }
+  .app-list-tag {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .app-list-arrow {
+    flex-shrink: 0; color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+    width: 14px; height: 14px;
+  }
+  .app-list-row:hover .app-list-arrow {
+    color: var(--pc);
+    transform: translate(2px, -2px);
+  }
+
+  /* ── Hero bottom strip (terminal + closed, stacked full-width) ──────── */
+  .hero-bottom {
+    display: flex; flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
   }
   .bento-feature .bento-app-name {
     font-size: clamp(32px, 4.6vw, 50px);
@@ -416,15 +580,18 @@
     color: rgba(255,255,255,0.8);
   }
 
-  /* Package tile — terminal-block aesthetic to set it apart from the
-     SaaS-colored cards. Looks like real shell output. */
+  /* Package tile — terminal-block aesthetic. Self-contained (no longer
+     relies on the old .bento-tile wrapper). */
   .bento-package {
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
     background: #06070d;
     border: 1px solid rgba(34, 211, 238, 0.28);
-    display: flex; flex-direction: column;
-    padding: 0;                 /* let the chrome bar own the top edge */
-    overflow: hidden;
+    border-radius: 18px;
+    padding: 0;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
+    text-decoration: none;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   }
   .bento-package:hover {
     border-color: rgba(34, 211, 238, 0.7);
@@ -493,11 +660,16 @@
     pointer-events: none; z-index: -1;
   }
 
-  /* Closed strip — horizontal layout: count + label + CTA. */
+  /* Closed strip — horizontal layout: count + label + CTA. Self-contained. */
   .bento-closed {
-    flex-direction: row; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: row; align-items: center; justify-content: space-between;
     padding: 16px 26px;
     background: rgba(255,255,255,0.018);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    text-decoration: none;
+    transition: background 0.25s, border-color 0.25s;
   }
   .bento-closed:hover {
     border-color: var(--line-strong);
@@ -1127,79 +1299,80 @@
     </div>
 
     <%
-      # Hand-placed positions for the scatter/mood-board layout.
-      # Coordinates are relative to a 1080×720 container; mobile drops
-      # absolute positioning entirely and stacks the cards vertically.
-      hero_pos = {
-        "iScan"      => "top: 40px; left: 30px;  width: 360px; height: 330px; --rot: -1.5deg;",
-        "iSpy"       => "top: 30px; left: 460px; width: 240px; height: 175px; --rot:  1.2deg;",
-        "iSsl"       => "top: 240px; left: 440px; width: 220px; height: 160px; --rot: -0.8deg;",
-        "iLink"      => "top: 60px; left: 740px; width: 270px; height: 200px; --rot:  1.5deg;",
-        "GhRev"      => "top: 290px; left: 720px; width: 260px; height: 200px; --rot: -0.8deg;",
-        "iBlockBots" => "top: 520px; left: 720px; width: 250px; height: 165px; --rot:  1deg;",
-        "iWatcher"   => "top: 420px; left: 460px; width: 240px; height: 175px; --rot: -1.2deg;",
-      }
-      currency_pos = "top: 400px; left: 30px;  width: 400px; height: 145px; --rot:  0.5deg;"
-      closed_pos   = "top: 580px; left: 30px;  width: 400px; height: 100px; --rot: -0.5deg;"
+      flagship  = live_apps.first              # iScan
+      rest_apps = live_apps.drop(1)            # the other 6 live apps
     %>
-    <div class="bento-grid">
-      <% live_apps.each_with_index do |app, i| %>
-        <% featured = (i == 0) %>
-        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="bento-tile bento-app<%= ' bento-feature' if featured %>"
-           style="--pc: <%= app[:color] %>; <%= hero_pos[app[:name]] %>">
-          <span class="bento-app-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="<%= app[:icon] %>"/>
-            </svg>
+
+    <div class="hero-showcase">
+      <!-- ── Left: FEATURED flagship card (iScan + mock terminal output) ── -->
+      <a href="<%= flagship[:url] %>" target="_blank" rel="noopener"
+         class="featured-card" style="--pc: <%= flagship[:color] %>;">
+        <span class="spotlight"></span>
+        <div class="featured-head">
+          <span class="crown">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            Flagship · Built for bug bounty
           </span>
-          <div class="bento-app-top">
-            <span class="live-dot" title="live"></span>
-            <% if featured %>
-              <svg class="featured-star" fill="currentColor" viewBox="0 0 24 24" aria-label="flagship">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>
-              </svg>
-            <% end %>
-            <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+          </svg>
+        </div>
+        <h2 class="featured-name"><%= flagship[:name] %><span class="tld"><%= flagship[:tld] %></span></h2>
+        <div class="featured-tag"><%= flagship[:tag] %></div>
+        <div class="featured-snippet" aria-hidden="true">
+          <% flagship[:snippet].each do |line| %>
+            <span class="l">
+              <% if line[:s] == :prompt %>
+                <span class="prompt">$</span><span class="cmd"><%= line[:t].sub(/^\$ /, '') %></span>
+              <% else %>
+                <span class="<%= line[:s] %>"><%= line[:t] %></span>
+              <% end %>
+            </span>
+          <% end %>
+        </div>
+        <p class="featured-blurb"><%= flagship[:blurb] %></p>
+      </a>
+
+      <!-- ── Right: tight LIST of the other 6 live apps ──────────────── -->
+      <div class="app-list">
+        <% rest_apps.each do |app| %>
+          <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+             class="app-list-row" style="--pc: <%= app[:color] %>;">
+            <span class="app-list-dot"></span>
+            <div class="app-list-info">
+              <div class="app-list-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+              <div class="app-list-tag"><%= app[:tag] %></div>
+            </div>
+            <svg class="app-list-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
             </svg>
-          </div>
-          <div style="position: relative; z-index: 1;">
-            <div class="bento-app-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-            <div class="bento-app-tag"><%= app[:tag] %></div>
-            <% if featured %>
-              <p class="featured-desc"><%= app[:blurb] %></p>
-            <% end %>
-          </div>
-        </a>
-        <% if i == 4 %>
-          <!-- Highlighted OSS package: currency-symbols. Terminal-block
-               aesthetic (mono, $ prompt, scanlines) sets it apart from
-               the SaaS app tiles. Download count live-fetched via shields.io. -->
-          <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
-             class="bento-tile bento-package" aria-label="currency-symbols on PyPI — live monthly downloads"
-             style="<%= currency_pos %>">
-            <div class="term-chrome">
-              <span class="term-lights"><span></span><span></span><span></span></span>
-              <span class="term-title">pypi.org / currency-symbols</span>
-            </div>
-            <svg class="term-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-            </svg>
-            <div class="term-body">
-              <div class="term-line">
-                <span class="term-prompt">$</span><span class="term-cmd">pip install </span><span class="term-pkg">currency-symbols</span>
-              </div>
-              <div class="term-line term-out">
-                <span class="ok">✓</span>downloaded <span class="big" data-downloads-of="pypi/currency-symbols">—</span><span class="dim">× / month</span>
-              </div>
-            </div>
           </a>
         <% end %>
-      <% end %>
+      </div>
+    </div>
 
-      <!-- Archive footer strip — hand-placed at the bottom-left. -->
-      <a href="#shipping" class="bento-tile bento-closed" style="<%= closed_pos %>">
+    <!-- ── Below showcase: currency-symbols terminal + closed-archive strip ── -->
+    <div class="hero-bottom">
+      <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
+         class="bento-package" aria-label="currency-symbols on PyPI — live monthly downloads">
+        <div class="term-chrome">
+          <span class="term-lights"><span></span><span></span><span></span></span>
+          <span class="term-title">pypi.org / currency-symbols  ·  open-source highlight</span>
+        </div>
+        <svg class="term-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+        </svg>
+        <div class="term-body">
+          <div class="term-line">
+            <span class="term-prompt">$</span><span class="term-cmd">pip install </span><span class="term-pkg">currency-symbols</span>
+          </div>
+          <div class="term-line term-out">
+            <span class="ok">✓</span>downloaded <span class="big" data-downloads-of="pypi/currency-symbols">—</span><span class="dim">× / month</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#shipping" class="bento-closed">
         <span class="bento-closed-l">
           <span class="bento-closed-num"><%= closed_apps.length %></span>
           <span class="bento-closed-label">Retired apps · still part of the journey</span>
@@ -1567,35 +1740,12 @@
     (function () {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      // Spotlight (per-tile)
-      document.querySelectorAll('.bento-tile').forEach(function (tile) {
+      // Mouse-tracking spotlight on the featured card (driven by --mx/--my).
+      document.querySelectorAll('.featured-card, .oss-card, .ship-card').forEach(function (tile) {
         tile.addEventListener('mousemove', function (e) {
           var r = tile.getBoundingClientRect();
           tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
           tile.style.setProperty('--my', (e.clientY - r.top) + 'px');
-        });
-      });
-
-      // Parallax (whole hero) — only on the desktop scatter layout.
-      var wrap  = document.querySelector('.bento-grid');
-      var cards = document.querySelectorAll('.bento-grid > .bento-tile');
-      if (!wrap || !cards.length) return;
-      if (window.matchMedia('(max-width: 1023px)').matches) return;  // mobile = stacked, no parallax
-
-      wrap.addEventListener('mousemove', function (e) {
-        var r = wrap.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width - 0.5;
-        var py = (e.clientY - r.top) / r.height - 0.5;
-        cards.forEach(function (card, i) {
-          var depth = 1 + (i % 3) * 0.4;        // staggered depths feel layered
-          card.style.setProperty('--tx', (-px * depth * 7).toFixed(2) + 'px');
-          card.style.setProperty('--ty', (-py * depth * 7).toFixed(2) + 'px');
-        });
-      });
-      wrap.addEventListener('mouseleave', function () {
-        cards.forEach(function (card) {
-          card.style.setProperty('--tx', '0px');
-          card.style.setProperty('--ty', '0px');
         });
       });
     })();
