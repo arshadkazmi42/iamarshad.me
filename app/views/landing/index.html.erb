@@ -169,38 +169,17 @@
   .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(124, 92, 255, 0.45); }
   @keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-  /* ── Hero ────────────────────────────────────────────────────────────── */
+  /* ── Hero: app bento grid ───────────────────────────────────────────── */
+  /* Personal identity moves to the About section; the hero is now an
+     immediate visual showcase of the 9 SaaS apps Arshad has shipped. */
   .hero {
     padding: 110px 24px 50px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    max-width: 920px; margin: 0 auto;
+    text-align: center;
   }
-  /* Hero avatar */
-  .hero-photo-wrap {
-    position: relative; width: 72px; height: 72px;
-    margin: 0 auto 18px;
-    animation: fadeUp 0.7s 0.0s ease-out both;
+  .hero-intro {
+    margin-bottom: 28px;
   }
-  .hero-photo-wrap::before {
-    content: ""; position: absolute; inset: -6px; border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--glow1), var(--glow2), var(--glow3), var(--glow4), var(--glow1));
-    opacity: 0.5; filter: blur(11px);
-    animation: spin 20s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .hero-photo {
-    position: relative; width: 100%; height: 100%; border-radius: 50%;
-    object-fit: cover; border: 2px solid rgba(255,255,255,0.18);
-    background: var(--bg);
-    box-shadow: 0 6px 22px rgba(0,0,0,0.5);
-  }
-  .hero-photo-status {
-    position: absolute; bottom: 2px; right: 2px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--green); border: 2.5px solid var(--bg);
-    box-shadow: 0 0 8px var(--green);
-    z-index: 2;
-  }
-
   .hero-eyebrow {
     display: inline-flex; align-items: center; gap: 7px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
@@ -208,7 +187,7 @@
     padding: 5px 13px; border-radius: 999px;
     border: 1px solid rgba(251, 191, 36, 0.22);
     background: rgba(251, 191, 36, 0.06);
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     animation: fadeUp 0.7s 0.06s ease-out both;
   }
   .hero-eyebrow .dot {
@@ -216,15 +195,14 @@
     background: var(--glow4); box-shadow: 0 0 8px var(--glow4);
     animation: pulseDot 2s infinite ease-in-out;
   }
-
   .hero h1 {
-    font-size: clamp(34px, 5.5vw, 60px); font-weight: 900;
-    line-height: 1.02; letter-spacing: -0.035em;
-    max-width: 720px; margin-bottom: 16px;
+    font-size: clamp(28px, 4.6vw, 48px); font-weight: 900;
+    line-height: 1.05; letter-spacing: -0.03em;
+    max-width: 740px; margin: 0 auto 10px;
     animation: fadeUp 0.8s 0.08s ease-out both;
   }
   .hero h1 .gr {
-    background: linear-gradient(135deg, var(--glow1) 0%, var(--glow2) 40%, var(--glow3) 70%, var(--glow4) 100%);
+    background: linear-gradient(135deg, var(--glow1) 0%, var(--glow2) 30%, var(--glow3) 60%, var(--glow4) 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text; background-clip: text; color: transparent;
     animation: gradientShift 7s ease-in-out infinite;
@@ -233,113 +211,174 @@
     0%, 100% { background-position: 0% 50%; }
     50%      { background-position: 100% 50%; }
   }
-
   .hero-sub {
-    font-size: clamp(14px, 1.6vw, 16px); color: var(--muted);
-    max-width: 540px; line-height: 1.65; margin-bottom: 26px;
+    font-size: clamp(13px, 1.6vw, 15px); color: var(--muted);
+    max-width: 480px; line-height: 1.6; margin: 0 auto;
     animation: fadeUp 0.8s 0.16s ease-out both;
   }
-  .hero-sub strong { color: var(--text); font-weight: 600; }
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  .hero-meta {
-    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
-    margin-bottom: 24px;
+  /* ── Bento grid: 3x3 mix of app/stat/closed tiles ────────────────────── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 22px;
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
-  .meta-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 500; color: var(--muted);
-    padding: 5px 10px; border-radius: 999px;
-    background: rgba(255,255,255,0.025); border: 1px solid var(--line);
+  .bento-tile {
+    --pc: var(--text);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    min-height: 168px;
+    text-align: left;
   }
-  .meta-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
+  .bento-tile:hover { transform: translateY(-3px); }
 
-  /* ── Hero constellation: 7 app-colored planets orbiting the avatar ───
-     Each "planet" is a live app. Positions are computed in ERB (sin/cos
-     of i × 360/N). The whole orbit ring rotates continuously, but planets
-     are individually hoverable, scaling up with their brand-color glow. */
-  .hero-constellation {
-    position: relative;
-    width: 260px; height: 260px;
-    margin: 0 auto 22px;
-    animation: fadeUp 0.7s 0.0s ease-out both;
+  /* App tiles — solid brand-color gradient, white text */
+  .bento-app {
+    background: linear-gradient(140deg,
+      color-mix(in srgb, var(--pc) 78%, transparent),
+      color-mix(in srgb, var(--pc) 38%, var(--bg)));
+    border-color: color-mix(in srgb, var(--pc) 45%, transparent);
   }
-  .hero-constellation .hero-photo-wrap {
-    /* Override the centered/margin-auto wrap so it sits dead center of the constellation. */
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    z-index: 2;
+  .bento-app::after {
+    content: ""; position: absolute;
+    bottom: -48px; right: -48px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: var(--pc); opacity: 0.32;
+    filter: blur(45px); pointer-events: none;
   }
-  /* Soft gradient haze behind the orbits — adds depth without competing with the planets. */
-  .hero-constellation::before {
-    content: ""; position: absolute; inset: 16%;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, #7c5cff22, #22d3ee22, #fb718522, #fbbf2422, #7c5cff22);
-    filter: blur(28px);
-    animation: spin 24s linear infinite;
-    pointer-events: none; z-index: 0;
+  .bento-app:hover {
+    box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--pc) 55%, transparent);
+    border-color: color-mix(in srgb, var(--pc) 85%, transparent);
   }
-  /* Faint dotted orbit path — hints at the circular motion */
-  .hero-constellation::after {
-    content: ""; position: absolute; inset: 20px;
-    border: 1px dashed rgba(255,255,255,0.07);
-    border-radius: 50%;
-    pointer-events: none; z-index: 0;
+  .bento-app-top {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .planets-orbit {
-    position: absolute; inset: 0; z-index: 1;
-    animation: orbit-spin 38s linear infinite;
-    transform-origin: center;
+  .bento-app-top .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.7);
+    animation: pulseDot 2s infinite;
   }
-  .planet {
-    position: absolute;
+  .bento-app-top .arrow {
     width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--pc);
-    box-shadow:
-      0 0 10px var(--pc),
-      0 0 24px color-mix(in srgb, var(--pc) 55%, transparent),
-      inset 0 0 0 1.5px rgba(10, 7, 16, 0.55);
-    transition: transform 0.25s ease, box-shadow 0.25s;
-    /* Counter-rotate so the planet's visual rotation cancels the orbit spin — keeps it visually still while orbiting. */
-    transform: rotate(0deg);
+    color: rgba(255,255,255,0.7);
+    transition: transform 0.2s, color 0.2s;
   }
-  .planet:hover {
-    transform: scale(1.6);
-    box-shadow:
-      0 0 18px var(--pc),
-      0 0 40px var(--pc),
-      inset 0 0 0 1.5px rgba(10, 7, 16, 0.55);
-    z-index: 5;
+  .bento-app:hover .arrow {
+    color: #fff;
+    transform: translate(2px, -2px);
   }
-  @keyframes orbit-spin {
-    to { transform: rotate(360deg); }
+  .bento-app-name {
+    position: relative; z-index: 1;
+    font-size: clamp(20px, 2.6vw, 26px); font-weight: 900;
+    letter-spacing: -0.03em; line-height: 1.05;
+    color: #fff;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .planets-orbit, .hero-constellation::before { animation: none; }
+  .bento-app-name .tld {
+    color: rgba(255,255,255,0.55); font-weight: 500;
   }
-  @media (max-width: 540px) {
-    .hero-constellation { width: 220px; height: 220px; }
+  .bento-app-tag {
+    position: relative; z-index: 1;
+    margin-top: 5px;
+    font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
   }
 
-  .hero-socials {
-    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
-    animation: fadeUp 0.8s 0.32s ease-out both;
+  /* Stat tile — sits in the middle of the grid, neutral, info-rich */
+  .bento-stat {
+    cursor: default;
+    align-items: center; justify-content: center; text-align: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.02);
+    border-style: dashed;
   }
+  .bento-stat:hover { transform: none; border-color: var(--line); }
+  .bento-stat-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .bento-stat-row {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .bento-stat-row > div { text-align: center; }
+  .bento-stat-row .num {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--glow1), var(--glow2));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .bento-stat-row .sub {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-top: 5px;
+  }
+
+  /* Closed tile — link to the full archive */
+  .bento-closed {
+    align-items: center; justify-content: center; text-align: center;
+    background: rgba(255,255,255,0.018);
+  }
+  .bento-closed:hover {
+    border-color: var(--line-strong);
+    background: rgba(255,255,255,0.035);
+  }
+  .bento-closed-num {
+    font-size: 42px; font-weight: 900;
+    color: rgba(255,255,255,0.42);
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .bento-closed-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+    margin: 6px 0 14px;
+  }
+  .bento-closed-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    width: 70%;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+  .bento-closed:hover .bento-closed-cta { color: var(--text); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 760px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .bento-tile { min-height: 140px; }
+  }
+  @media (max-width: 460px) {
+    .bento-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Shared .social pill style — still used by the About section below */
   .social {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 12px; font-weight: 500; color: var(--muted);
     padding: 6px 11px; border-radius: 999px;
     border: 1px solid var(--line); transition: all 0.2s;
+    text-decoration: none;
   }
   .social:hover { color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03); transform: translateY(-1px); }
   .social svg { width: 12px; height: 12px; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ── Marquee stats strip ────────────────────────────────────────────── */
   .marquee-wrap {
@@ -718,20 +757,87 @@
   }
   .oss-more:hover { color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03); }
 
-  /* ── STORY ───────────────────────────────────────────────────────────── */
-  .story { max-width: 640px; }
-  .story p {
+  /* ── ABOUT ───────────────────────────────────────────────────────────── */
+  /* Replaces the old Story section + holds all the identity content that
+     used to live in the hero (photo, name, role chips, social links). */
+  .about { max-width: 720px; }
+  .about-card {
+    display: flex; align-items: center; gap: 22px;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    margin-bottom: 32px;
+  }
+  .about-photo-wrap {
+    position: relative; flex-shrink: 0;
+    width: 96px; height: 96px;
+  }
+  .about-photo-wrap::before {
+    content: ""; position: absolute; inset: -5px; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--glow1), var(--glow2), var(--glow3), var(--glow4), var(--glow1));
+    opacity: 0.4; filter: blur(10px);
+    animation: spin 20s linear infinite;
+  }
+  .about-photo {
+    position: relative;
+    width: 100%; height: 100%; border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.18);
+    background: var(--bg);
+  }
+  .about-status {
+    position: absolute; bottom: 3px; right: 3px; z-index: 2;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--green); border: 2.5px solid var(--bg);
+    box-shadow: 0 0 8px var(--green);
+  }
+  .about-info { flex: 1; min-width: 0; }
+  .about-info .name {
+    font-size: 22px; font-weight: 800;
+    letter-spacing: -0.02em; color: var(--text);
+    margin-bottom: 6px;
+  }
+  .about-info .tagline {
+    font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0 0 12px;
+  }
+  .about-info .tagline a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
+  .about-info .tagline strong { color: var(--text); font-weight: 600; }
+  .about-chips {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;
+  }
+  .about-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; color: var(--muted);
+    padding: 4px 9px; border-radius: 999px;
+    background: rgba(255,255,255,0.025); border: 1px solid var(--line);
+  }
+  .about-chip .swatch { width: 6px; height: 6px; border-radius: 50%; }
+  .about-socials {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+
+  .about-story {}
+  .about-story p {
     font-size: 14.5px; line-height: 1.75; color: rgba(235, 231, 245, 0.78);
     margin-bottom: 14px;
   }
-  .story p strong { color: var(--text); font-weight: 600; }
-  .story p a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.3); }
-  .story p a:hover { border-color: var(--text); }
-  .story .pull {
+  .about-story p strong { color: var(--text); font-weight: 600; }
+  .about-story p a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.3); }
+  .about-story p a:hover { border-color: var(--text); }
+  .about-story .pull {
     font-size: 15.5px; font-weight: 500; color: var(--text);
     border-left: 2px solid var(--glow1);
     padding: 6px 0 6px 16px; margin: 18px 0;
     line-height: 1.6; letter-spacing: -0.01em;
+  }
+  .about-story .sig-line {
+    margin-top: 22px; font-size: 13.5px; color: var(--text); font-weight: 600;
+  }
+
+  @media (max-width: 540px) {
+    .about-card { flex-direction: column; text-align: center; gap: 16px; padding: 20px; }
+    .about-chips, .about-socials { justify-content: center; }
   }
 
   /* ── Floating pill footer ────────────────────────────────────────────── */
@@ -810,72 +916,63 @@
       <a href="#shipping" class="nav-link">Shipping</a>
       <a href="#bounty"   class="nav-link">Bounty</a>
       <a href="#oss"      class="nav-link">OSS</a>
-      <a href="#story"    class="nav-link">Story</a>
+      <a href="#about"    class="nav-link">About</a>
     </div>
     <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="nav-cta">Say hi</a>
   </nav>
 
-  <!-- ─────────────────────────── HERO ────────────────────────── -->
+  <!-- ─────────────────────────── HERO (app bento) ──────────────────────── -->
+  <!-- Hero is now an immediate visual showcase of the 9 SaaS apps Arshad
+       has shipped. Personal identity (photo, name, role, socials) lives
+       in the About section near the bottom of the page. -->
   <section id="top" class="hero">
-    <%
-      # Pre-compute each planet's (x, y) offset from the constellation centre.
-      # `r` is the orbit radius; small bit of variance per index keeps the
-      # planets from feeling robotic.
-      r = 108
-    %>
-    <div class="hero-constellation" aria-label="7 live apps orbiting Arshad's avatar">
-      <div class="planets-orbit">
-        <% live_apps.each_with_index do |app, i| %>
-          <% angle_rad = ((360.0 / live_apps.length) * i - 90) * Math::PI / 180 %>
-          <% rr = r + (i.even? ? 0 : 4) %>
-          <% x = (Math.cos(angle_rad) * rr).round %>
-          <% y = (Math.sin(angle_rad) * rr).round %>
-          <a class="planet"
-             href="<%= app[:url] %>" target="_blank" rel="noopener"
-             title="<%= app[:name] %><%= app[:tld] %> — <%= app[:tag] %>"
-             aria-label="<%= app[:name] %><%= app[:tld] %>: <%= app[:tag] %>"
-             style="--pc: <%= app[:color] %>; left: calc(50% + <%= x %>px - 8px); top: calc(50% + <%= y %>px - 8px);"></a>
+    <div class="hero-intro">
+      <span class="hero-eyebrow">
+        <span class="dot"></span> Built solo · Berlin · 7 live · 5 retired
+      </span>
+      <h1>
+        9 SaaS apps. <span class="gr">All shipped solo.</span>
+      </h1>
+      <p class="hero-sub">
+        Each one started as a tool I needed myself. Click any to open it. <a href="#about">more about me ↓</a>
+      </p>
+    </div>
+
+    <div class="bento-grid">
+      <% live_apps.each_with_index do |app, i| %>
+        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+           class="bento-tile bento-app" style="--pc: <%= app[:color] %>;">
+          <div class="bento-app-top">
+            <span class="live-dot" title="live"></span>
+            <svg class="arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+            </svg>
+          </div>
+          <div>
+            <div class="bento-app-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+            <div class="bento-app-tag"><%= app[:tag] %></div>
+          </div>
+        </a>
+        <% if i == 3 %>
+          <!-- Center tile of the 3×3 grid: live numbers, not an app. -->
+          <div class="bento-tile bento-stat" aria-label="At-a-glance numbers">
+            <div class="bento-stat-label">By the numbers</div>
+            <div class="bento-stat-row">
+              <div><div class="num"><%= shipping.length %></div><div class="sub">Built</div></div>
+              <div><div class="num"><%= live_apps.length %></div><div class="sub">Live</div></div>
+              <div><div class="num"><span data-gh-stat="public_repos">—</span></div><div class="sub">Repos</div></div>
+            </div>
+          </div>
         <% end %>
-      </div>
-      <div class="hero-photo-wrap">
-        <img class="hero-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="eager" decoding="async" width="96" height="96">
-        <span class="hero-photo-status" title="online · in Berlin"></span>
-      </div>
-    </div>
-    <div class="hero-eyebrow">
-      <span class="dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--glow4); box-shadow: 0 0 8px var(--glow4); animation: pulseDot 2s infinite ease-in-out;"></span> Berlin · Built solo
-    </div>
-    <h1>
-      Hi, I'm Arshad.<br>
-      I <span class="gr">ship, hunt</span> &amp; write code.
-    </h1>
-    <p class="hero-sub">
-      I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
-    </p>
+      <% end %>
 
-    <div class="hero-meta">
-      <span class="meta-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
-      <span class="meta-chip"><span class="swatch" style="background: var(--glow3)"></span> Bug bounty hunter</span>
-      <span class="meta-chip"><span class="swatch" style="background: var(--glow2)"></span> SWE @ Smartly.io</span>
-      <span class="meta-chip">📍 Berlin 🇩🇪</span>
-    </div>
-
-    <div class="hero-socials">
-      <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
-        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        @arshadkazmi42
-      </a>
-      <a href="https://github.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
-        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        arshadkazmi42
-      </a>
-      <a href="https://www.linkedin.com/in/arshadkazmi42" target="_blank" rel="noopener" class="social">
-        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        arshadkazmi42
-      </a>
-      <a href="mailto:arshadkazmi42@gmail.com" class="social">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
-        Email
+      <!-- Last cell: link to the full archive (includes the 5 retired apps). -->
+      <a href="#shipping" class="bento-tile bento-closed">
+        <div>
+          <div class="bento-closed-num"><%= closed_apps.length %></div>
+          <div class="bento-closed-label">Retired apps</div>
+        </div>
+        <span class="bento-closed-cta">See archive →</span>
       </a>
     </div>
   </section>
@@ -1041,24 +1138,63 @@
     </div>
   </section>
 
-  <!-- ────────────────────────── STORY ───────────────────────── -->
-  <section id="story" class="section story reveal">
-    <div class="section-label">$ cat ~/story.md</div>
-    <h2>Why I build.</h2>
+  <!-- ────────────────────────── ABOUT ───────────────────────── -->
+  <!-- Holds the personal identity that used to live in the hero
+       (photo, name, role chips, social links) + the long-form story. -->
+  <section id="about" class="section about reveal">
+    <div class="section-label">$ whoami</div>
+    <h2>The person behind the apps.</h2>
 
-    <p>I write code for a living, then go home and write more code for fun. It looks unhealthy on paper. It feels like the opposite from the inside.</p>
+    <div class="about-card">
+      <div class="about-photo-wrap">
+        <img class="about-photo" src="<%= avatar_url %>" alt="Arshad Kazmi" loading="lazy" decoding="async">
+        <span class="about-status" title="online · in Berlin"></span>
+      </div>
+      <div class="about-info">
+        <div class="name">Arshad Kazmi</div>
+        <p class="tagline">
+          I run a tiny SaaS suite under <strong>i*.today</strong>, hunt bugs as <a href="https://hackerone.com/codermak" target="_blank" rel="noopener">@codermak</a>, and write software at <a href="https://smartly.io" target="_blank" rel="noopener">Smartly.io</a>. I do all three because I haven't figured out which one I love more.
+        </p>
+        <div class="about-chips">
+          <span class="about-chip"><span class="swatch" style="background: var(--glow1)"></span> Indie hacker</span>
+          <span class="about-chip"><span class="swatch" style="background: var(--glow3)"></span> Bug bounty hunter</span>
+          <span class="about-chip"><span class="swatch" style="background: var(--glow2)"></span> SWE @ Smartly.io</span>
+          <span class="about-chip">📍 Berlin 🇩🇪</span>
+        </div>
+        <div class="about-socials">
+          <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @arshadkazmi42
+          </a>
+          <a href="https://github.com/arshadkazmi42" target="_blank" rel="noopener" class="social">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            arshadkazmi42
+          </a>
+          <a href="https://www.linkedin.com/in/arshadkazmi42" target="_blank" rel="noopener" class="social">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            arshadkazmi42
+          </a>
+          <a href="mailto:arshadkazmi42@gmail.com" class="social">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+            Email
+          </a>
+        </div>
+      </div>
+    </div>
 
-    <p>The day job at <strong>Smartly.io</strong> is where I get to do <em>serious</em> engineering — big systems, real users, careful trade-offs. The nights and weekends go into the <strong>i*.today</strong> suite: small, opinionated tools, each born from a problem I had myself. A secret I almost missed. An SSL cert that expired silently. A Privnote link I didn't fully trust.</p>
+    <div class="about-story">
+      <p>I write code for a living, then go home and write more code for fun. It looks unhealthy on paper. It feels like the opposite from the inside.</p>
 
-    <p>And then there's the bug bounty side. <strong>@codermak</strong> is the handle I hunt under, and it's the part of my life that closes the loop: tools I build for hunting end up shipped as products, and bugs I find in the wild surface ideas for tools that don't exist yet.</p>
+      <p>The day job at <strong>Smartly.io</strong> is where I get to do <em>serious</em> engineering — big systems, real users, careful trade-offs. The nights and weekends go into the <strong>i*.today</strong> suite: small, opinionated tools, each born from a problem I had myself. A secret I almost missed. An SSL cert that expired silently. A Privnote link I didn't fully trust.</p>
 
-    <div class="pull">It all sort of feeds itself. The apps make me a better hunter. The hunting makes me a sharper engineer. The engineering teaches me how to ship faster.</div>
+      <p>And then there's the bug bounty side. <strong>@codermak</strong> is the handle I hunt under, and it's the part of my life that closes the loop: tools I build for hunting end up shipped as products, and bugs I find in the wild surface ideas for tools that don't exist yet.</p>
 
-    <p>If you're building something cool, hunting something tricky, or hiring for something interesting — <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener">DM me on X</a> or <a href="mailto:arshadkazmi42@gmail.com">drop an email</a>. I read everything.</p>
+      <div class="pull">It all sort of feeds itself. The apps make me a better hunter. The hunting makes me a sharper engineer. The engineering teaches me how to ship faster.</div>
 
-    <p style="margin-top: 22px; font-size: 13.5px; color: var(--text); font-weight: 600;">
-      — Arshad
-    </p>
+      <p>If you're building something cool, hunting something tricky, or hiring for something interesting — <a href="https://twitter.com/arshadkazmi42" target="_blank" rel="noopener">DM me on X</a> or <a href="mailto:arshadkazmi42@gmail.com">drop an email</a>. I read everything.</p>
+
+      <p class="sig-line">— Arshad</p>
+    </div>
   </section>
 
   <!-- ────────────────────────── FOOTER ──────────────────────── -->
