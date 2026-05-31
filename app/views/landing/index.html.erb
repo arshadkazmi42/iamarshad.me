@@ -17,6 +17,7 @@
     # tile as fake terminal output — gives the card real product character
     # instead of just a colored panel with a name.
     { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff",
+      span: "wide",  # 2-cols wide in the bento
       icon: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
       snippet: [
         { s: :prompt, t: "$ iscan --org acme" },
@@ -28,6 +29,7 @@
       ],
       blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
     { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee",
+      span: "small",  # 1x1
       icon: 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
       snippet: [
         { s: :ok,   t: "● LIVE · watching" },
@@ -36,6 +38,7 @@
       ],
       blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
     { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d",
+      span: "small",  # 1x1
       icon: 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
       snippet: [
         { s: :ok,   t: "✓ 47 domains monitored" },
@@ -44,6 +47,7 @@
       ],
       blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
     { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399",
+      span: "wide",  # 2x1
       icon: 'M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244',
       snippet: [
         { s: :ok,   t: "→ ilink.today/x4f9z" },
@@ -52,6 +56,7 @@
       ],
       blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
     { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def",
+      span: "tall",  # 1x2 — column on the right, spans 2 rows
       icon: 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
       snippet: [
         { s: :prompt, t: "PR #1234  +18 -7" },
@@ -60,6 +65,7 @@
       ],
       blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
     { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185",
+      span: "wide",  # 2x1
       icon: 'M9.75 9.75 14.25 14.25m0-4.5L9.75 14.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
       snippet: [
         { s: :warn, t: "⊘ 1,247 bots blocked" },
@@ -68,6 +74,7 @@
       ],
       blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
     { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6",
+      span: "wide",  # 2x1
       icon: 'M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z',
       snippet: [
         { s: :prompt, t: "$ iwatcher GHP_****" },
@@ -1087,53 +1094,44 @@
   .now .desc a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .now .desc a:hover { border-color: var(--text); }
 
-  /* ── SHIPPING: horizontal-scroll showcase (Apple Today / Netflix tile) ──
-     Cards flow left-to-right in a single track; scroll/swipe to reveal more.
-     Snap-scroll for satisfying drag. Gradient fade at both edges signals
-     overflow. Same `.ship-card` content as before, just laid out as a band. */
-  .ship-rail-wrap {
-    position: relative;
-    margin: 0 -24px;             /* break out of the section's 24px padding */
-  }
-  .ship-rail-wrap::before,
-  .ship-rail-wrap::after {
-    content: ""; position: absolute;
-    top: 0; bottom: 16px; width: 40px;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .ship-rail-wrap::before {
-    left: 0;
-    background: linear-gradient(to right, var(--bg), transparent);
-  }
-  .ship-rail-wrap::after {
-    right: 0;
-    background: linear-gradient(to left, var(--bg), transparent);
-  }
+  /* ── SHIPPING: mixed-span bento (Dribbble 23193374 layout) ───────────
+     4-col grid with each card carrying a span class:
+       .ship-card.span-wide  → 2 cols × 1 row
+       .ship-card.span-tall  → 1 col  × 2 rows
+       .ship-card.span-small → 1 col  × 1 row (default)
+     Cards flow into the grid in declaration order; iScan (wide), iSpy (small),
+     GhRev (tall), iSsl (small), iLink (wide), iBlockBots (wide), iWatcher (wide).
+  */
   .ship-grid {
-    display: flex;
-    gap: 14px;
-    overflow-x: auto;
-    overflow-y: visible;          /* allow hover lift */
-    padding: 6px 24px 18px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.15) transparent;
-    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 180px;
+    gap: 12px;
   }
-  .ship-grid::-webkit-scrollbar { height: 6px; }
-  .ship-grid::-webkit-scrollbar-track { background: transparent; }
-  .ship-grid::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.15);
-    border-radius: 3px;
-  }
-  .ship-grid > .ship-card {
-    flex: 0 0 320px;
-    scroll-snap-align: start;
-    min-height: 230px;
+  .ship-card.span-wide  { grid-column: span 2; }
+  .ship-card.span-tall  { grid-row:    span 2; }
+  .ship-card.span-small { /* default 1×1 */ }
+
+  /* Compact 1×1 tile content (just header — drop the body snippet) */
+  .ship-card.span-small .ship-card-body { display: none; }
+  .ship-card.span-small .ship-card-name { font-size: 22px; }
+  .ship-card.span-small .ship-card-tag  { font-size: 10px; }
+
+  /* Tall 1×2 tile content (bigger snippet area, header + body) */
+  .ship-card.span-tall .ship-card-name { font-size: 26px; }
+  .ship-card.span-tall .ship-card-body { padding: 16px 18px; font-size: 11px; }
+
+  @media (max-width: 1023px) {
+    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 168px; }
+    .ship-card.span-wide { grid-column: span 2; }
+    .ship-card.span-tall { grid-row: span 1; }
+    .ship-card.span-small { grid-column: span 1; }
   }
   @media (max-width: 540px) {
-    .ship-grid > .ship-card { flex: 0 0 86vw; }
+    .ship-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .ship-card.span-wide, .ship-card.span-tall, .ship-card.span-small {
+      grid-column: span 1; grid-row: span 1; min-height: 140px;
+    }
   }
   .ship-card {
     --pc: var(--text);
@@ -1201,6 +1199,29 @@
     width: 5px; height: 5px; border-radius: 50%;
     background: rgba(235, 231, 245, 0.4);
   }
+
+  /* Retired-apps inline strip below the bento */
+  .ship-archive {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.018);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+  .ship-archive-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-right: 4px;
+  }
+  .ship-archive-name {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+  }
+  .ship-archive-name .tld { color: rgba(255, 255, 255, 0.3); font-weight: 400; }
+  .ship-archive-sep { color: rgba(255, 255, 255, 0.2); }
 
   /* Closed cards: muted, non-interactive, no lift on hover */
   .ship-card.is-closed {
@@ -1740,36 +1761,36 @@
     <h2>Things I've shipped.</h2>
     <p class="section-sub">All 12 — what's live in production and what's been retired.</p>
 
-    <div class="ship-rail-wrap">
+    <!-- Mixed-span bento: 7 live SaaS apps. Each app's `span` field controls
+         its size: wide (2×1), tall (1×2), small (1×1). Layout mirrors the
+         Dribbble bento shot the user pointed at. -->
     <div class="ship-grid">
-      <% shipping.each do |app| %>
-        <% closed = app[:status] == :closed %>
-        <% tag    = closed ? :div : :a %>
-        <%= content_tag(tag,
-              {
-                class: "ship-card#{' is-closed' if closed}",
-                style: "--pc: #{app[:color]};",
-                href:   (app[:url] unless closed),
-                target: ('_blank' unless closed),
-                rel:    ('noopener' unless closed),
-              }.compact) do %>
+      <% live_apps.each do |app| %>
+        <a href="<%= app[:url] %>" target="_blank" rel="noopener"
+           class="ship-card span-<%= app[:span] || 'small' %>"
+           style="--pc: <%= app[:color] %>;">
           <div class="ship-card-top">
-            <% if closed %>
-              <span class="badge-closed"><span class="ld"></span> Closed</span>
-            <% else %>
-              <span class="badge-live"><span class="ld"></span> Live</span>
-              <span class="ship-arrow">
-                <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-              </span>
-            <% end %>
+            <span class="badge-live"><span class="ld"></span> Live</span>
+            <span class="ship-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+            </span>
           </div>
           <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
           <div class="ship-card-tag"><%= app[:tag] %></div>
           <p class="ship-card-blurb"><%= app[:blurb] %></p>
-        <% end %>
+        </a>
       <% end %>
     </div>
-    </div>
+
+    <!-- Retired apps as a simple inline strip below the bento. -->
+    <% if closed_apps.any? %>
+      <div class="ship-archive">
+        <span class="ship-archive-label">Also built · since retired:</span>
+        <% closed_apps.each_with_index do |app, i| %>
+          <span class="ship-archive-name" title="<%= app[:tag] %>"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></span><% if i < closed_apps.length - 1 %><span class="ship-archive-sep">·</span><% end %>
+        <% end %>
+      </div>
+    <% end %>
   </section>
 
   <!-- ───────────────────────── BOUNTY ────────────────────────── -->
