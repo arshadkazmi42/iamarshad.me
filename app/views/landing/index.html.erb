@@ -306,96 +306,97 @@
   @media (max-width: 760px)  { .app-cards-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 460px)  { .app-cards-grid { grid-template-columns: 1fr; } }
 
-  /* ── App card (one per live SaaS, equal weight in the grid) ──────── */
+  /* ── App card: two-zone design (colored header + dark terminal body) ─── */
   .app-card {
     --pc: var(--text);
-    --mx: 50%; --my: 50%;
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    background: linear-gradient(165deg, rgba(255,255,255,0.038), rgba(255,255,255,0.01));
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 16px;
-    padding: 14px;
     text-decoration: none;
     transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    min-height: 230px;
-  }
-  /* Top accent bar in brand color, fading out */
-  .app-card::before {
-    content: ""; position: absolute;
-    top: 0; left: 0; right: 0; height: 2.5px;
-    background: linear-gradient(90deg, var(--pc) 0%, color-mix(in srgb, var(--pc) 40%, transparent) 65%, transparent 100%);
-    box-shadow: 0 0 14px color-mix(in srgb, var(--pc) 60%, transparent);
-    z-index: 2;
-  }
-  /* Soft brand-color glow blob in the top-right */
-  .app-card::after {
-    content: ""; position: absolute;
-    top: -50px; right: -50px;
-    width: 150px; height: 150px; border-radius: 50%;
-    background: var(--pc); opacity: 0.10;
-    filter: blur(40px); pointer-events: none;
+    min-height: 240px;
   }
   .app-card:hover {
-    border-color: color-mix(in srgb, var(--pc) 50%, var(--line));
+    border-color: color-mix(in srgb, var(--pc) 55%, var(--line));
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px -12px color-mix(in srgb, var(--pc) 40%, transparent);
+    box-shadow: 0 16px 32px -12px color-mix(in srgb, var(--pc) 50%, transparent);
   }
-  .app-card:hover::after { opacity: 0.18; }
 
+  /* ── Top zone: colored header with bold brand presence ───────── */
+  .app-card-header {
+    position: relative;
+    padding: 16px 16px 14px;
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--pc) 65%, transparent) 0%, transparent 70%),
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--pc) 38%, transparent),
+        color-mix(in srgb, var(--pc) 12%, transparent) 80%);
+    border-bottom: 1px solid color-mix(in srgb, var(--pc) 28%, var(--line));
+    overflow: hidden;
+  }
+  .app-card:hover .app-card-header {
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--pc) 78%, transparent) 0%, transparent 70%),
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--pc) 48%, transparent),
+        color-mix(in srgb, var(--pc) 16%, transparent) 80%);
+  }
   .app-card-top {
-    position: relative; z-index: 2;
+    position: relative; z-index: 1;
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .app-card-live {
     width: 7px; height: 7px; border-radius: 50%;
-    background: var(--pc);
-    box-shadow: 0 0 8px var(--pc);
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.7);
     animation: pulseDot 2s infinite;
   }
   .app-card-arrow {
-    width: 13px; height: 13px;
-    color: rgba(255, 255, 255, 0.35);
+    width: 14px; height: 14px;
+    color: rgba(255,255,255,0.65);
     transition: color 0.2s, transform 0.2s;
   }
   .app-card:hover .app-card-arrow {
-    color: var(--pc);
+    color: #fff;
     transform: translate(2px, -2px);
   }
   .app-card-name {
-    position: relative; z-index: 2;
-    font-size: 22px; font-weight: 900;
-    letter-spacing: -0.025em; line-height: 1;
-    color: var(--text);
+    position: relative; z-index: 1;
+    font-size: 24px; font-weight: 900;
+    letter-spacing: -0.03em; line-height: 1;
+    color: #fff;
   }
-  .app-card-name .tld { color: var(--muted); font-weight: 500; }
+  .app-card-name .tld {
+    color: rgba(255, 255, 255, 0.55); font-weight: 500;
+  }
   .app-card-tag {
-    position: relative; z-index: 2;
+    position: relative; z-index: 1;
     margin-top: 4px;
-    font-size: 9.5px; font-weight: 700;
+    font-size: 10px; font-weight: 700;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--pc);
+    color: rgba(255, 255, 255, 0.78);
   }
-  /* Mini mock terminal — the "what it does" hook per card */
-  .app-card-snippet {
-    position: relative; z-index: 2;
-    margin-top: 12px;
-    padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 10.5px; line-height: 1.65;
-    overflow: hidden;
+
+  /* ── Bottom zone: dark terminal body with the snippet ────────── */
+  .app-card-body {
     flex: 1;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.5);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px; line-height: 1.7;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
   }
-  .app-card-snippet .l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .app-card-snippet .prompt { color: rgba(255,255,255,0.4); margin-right: 4px; }
-  .app-card-snippet .cmd    { color: rgba(255,255,255,0.9); }
-  .app-card-snippet .warn   { color: #fbbf24; }
-  .app-card-snippet .ok     { color: #34d399; }
-  .app-card-snippet .dim    { color: rgba(255,255,255,0.35); }
+  .app-card-body .l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app-card-body .prompt { color: rgba(255,255,255,0.4); margin-right: 4px; }
+  .app-card-body .cmd    { color: rgba(255,255,255,0.92); }
+  .app-card-body .warn   { color: #fbbf24; }
+  .app-card-body .ok     { color: #34d399; }
+  .app-card-body .dim    { color: rgba(255,255,255,0.38); }
 
   /* ── OSS feature card (currency-symbols) ─────────────────────────────
      Clearly says "this is an open-source Python library, not a SaaS":
@@ -1364,15 +1365,17 @@
       <% live_apps.each do |app| %>
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
            class="app-card" style="--pc: <%= app[:color] %>;">
-          <div class="app-card-top">
-            <span class="app-card-live" title="live"></span>
-            <svg class="app-card-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
-            </svg>
+          <div class="app-card-header">
+            <div class="app-card-top">
+              <span class="app-card-live" title="live"></span>
+              <svg class="app-card-arrow" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/>
+              </svg>
+            </div>
+            <div class="app-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+            <div class="app-card-tag"><%= app[:tag] %></div>
           </div>
-          <div class="app-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="app-card-tag"><%= app[:tag] %></div>
-          <div class="app-card-snippet" aria-hidden="true">
+          <div class="app-card-body" aria-hidden="true">
             <% app[:snippet].each do |line| %>
               <span class="l">
                 <% if line[:s] == :prompt %>
