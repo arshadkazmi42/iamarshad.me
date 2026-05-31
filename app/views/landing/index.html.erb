@@ -212,6 +212,9 @@
     background: var(--glow4); box-shadow: 0 0 8px var(--glow4);
     animation: pulseDot 2s infinite ease-in-out;
   }
+  .hero {
+    max-width: 1080px;
+  }
   .hero h1 {
     font-size: clamp(38px, 6.5vw, 68px); font-weight: 900;
     line-height: 1.02; letter-spacing: -0.035em;
@@ -248,38 +251,44 @@
   .hero-sub a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .hero-sub a:hover { border-color: var(--text); }
 
-  /* ── Bento grid: real asymmetry across 4 cols × 4 rows ─────────────────
-     Row heights vary to break uniformity:
-       rows 1-2: 158px (housing the 2×2 iScan flagship + 4 small tiles)
-       row 3:    158px (currency-symbols 2-wide terminal + 2 small tiles)
-       row 4:     86px (archive strip, full-width footer cell) */
+  /* ── Hero: card-scatter (mood-board layout, NOT a grid) ─────────────
+     Each card is absolutely positioned with its own size, position and
+     rotation set inline. Cards are intentionally varied — different
+     dimensions, slight tilt — to read as a curated wall, not a directory.
+     On mobile, the absolute positioning is dropped and cards stack
+     vertically. */
   .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 158px 158px 158px 86px;
-    gap: 12px;
-    margin-top: 24px;
+    position: relative;
+    width: 100%;
+    height: 720px;
+    margin-top: 28px;
     animation: fadeUp 0.8s 0.24s ease-out both;
   }
   .bento-tile {
     --pc: var(--text);
     --mx: 50%; --my: 50%;
-    position: relative; overflow: hidden;
+    --rot: 0deg;
+    --tx: 0px; --ty: 0px;             /* parallax offsets, updated by JS on mousemove */
+    position: absolute;               /* positions set inline per card */
+    overflow: hidden;
     display: flex; flex-direction: column; justify-content: space-between;
-    padding: 16px;
+    padding: 18px;
     border-radius: 18px;
     border: 1px solid var(--line);
     background: var(--surface);
     text-decoration: none;
-    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
     text-align: left;
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+    transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.28s ease;
+    will-change: transform;
   }
-  .bento-tile:hover { transform: translateY(-3px); }
+  .bento-tile:hover {
+    transform: translate(var(--tx), calc(var(--ty) - 6px)) rotate(0deg) scale(1.025);
+    z-index: 10;
+  }
 
-  /* Featured 2×2 tile — gets prominence in the grid (iScan flagship) */
+  /* iScan flagship — biggest card, intentionally tilted slightly. */
   .bento-feature {
-    grid-column: span 2;
-    grid-row: span 2;
     padding: 26px;
   }
   .bento-feature .bento-app-name {
@@ -408,9 +417,8 @@
   }
 
   /* Package tile — terminal-block aesthetic to set it apart from the
-     SaaS-colored cards. Spans 2 cols. Looks like real shell output. */
+     SaaS-colored cards. Looks like real shell output. */
   .bento-package {
-    grid-column: span 2;
     background: #06070d;
     border: 1px solid rgba(34, 211, 238, 0.28);
     display: flex; flex-direction: column;
@@ -485,10 +493,8 @@
     pointer-events: none; z-index: -1;
   }
 
-  /* Closed strip — full-width footer cell of the bento.
-     Horizontal layout: archived count + label + see-archive CTA. */
+  /* Closed strip — horizontal layout: count + label + CTA. */
   .bento-closed {
-    grid-column: span 4;
     flex-direction: row; align-items: center; justify-content: space-between;
     padding: 16px 26px;
     background: rgba(255,255,255,0.018);
@@ -524,22 +530,28 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  @media (max-width: 760px) {
+  /* ── Mobile: drop absolute positioning, stack the cards vertically ──── */
+  @media (max-width: 1023px) {
     .bento-grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: auto;
-      grid-auto-rows: 130px;
+      height: auto;
+      display: flex; flex-direction: column;
+      gap: 12px;
     }
-    .bento-feature { grid-column: span 2; grid-row: span 1; min-height: 200px; }
-    .bento-feature .bento-app-name { font-size: 28px; }
+    .bento-tile {
+      position: static !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 140px;
+      transform: none !important;
+      --rot: 0deg !important;
+      --tx: 0 !important; --ty: 0 !important;
+    }
+    .bento-tile:hover {
+      transform: translateY(-3px) !important;
+    }
+    .bento-feature { min-height: 200px; }
+    .bento-feature .bento-app-name { font-size: 32px; }
     .bento-feature .featured-desc { display: none; }
-    .bento-package { grid-column: span 2; }
-    .bento-closed { grid-column: span 2; }
-  }
-  @media (max-width: 460px) {
-    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-    .bento-tile { min-height: 120px; }
-    .bento-feature, .bento-package, .bento-closed { grid-column: span 1; }
     .term-body { padding: 14px 16px; }
     .term-line { font-size: 12px; }
     .term-out .big { font-size: 18px; }
@@ -1114,11 +1126,28 @@
       </p>
     </div>
 
+    <%
+      # Hand-placed positions for the scatter/mood-board layout.
+      # Coordinates are relative to a 1080×720 container; mobile drops
+      # absolute positioning entirely and stacks the cards vertically.
+      hero_pos = {
+        "iScan"      => "top: 40px; left: 30px;  width: 360px; height: 330px; --rot: -1.5deg;",
+        "iSpy"       => "top: 30px; left: 460px; width: 240px; height: 175px; --rot:  1.2deg;",
+        "iSsl"       => "top: 240px; left: 440px; width: 220px; height: 160px; --rot: -0.8deg;",
+        "iLink"      => "top: 60px; left: 740px; width: 270px; height: 200px; --rot:  1.5deg;",
+        "GhRev"      => "top: 290px; left: 720px; width: 260px; height: 200px; --rot: -0.8deg;",
+        "iBlockBots" => "top: 520px; left: 720px; width: 250px; height: 165px; --rot:  1deg;",
+        "iWatcher"   => "top: 420px; left: 460px; width: 240px; height: 175px; --rot: -1.2deg;",
+      }
+      currency_pos = "top: 400px; left: 30px;  width: 400px; height: 145px; --rot:  0.5deg;"
+      closed_pos   = "top: 580px; left: 30px;  width: 400px; height: 100px; --rot: -0.5deg;"
+    %>
     <div class="bento-grid">
       <% live_apps.each_with_index do |app, i| %>
         <% featured = (i == 0) %>
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
-           class="bento-tile bento-app<%= ' bento-feature' if featured %>" style="--pc: <%= app[:color] %>;">
+           class="bento-tile bento-app<%= ' bento-feature' if featured %>"
+           style="--pc: <%= app[:color] %>; <%= hero_pos[app[:name]] %>">
           <span class="bento-app-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="<%= app[:icon] %>"/>
@@ -1148,7 +1177,8 @@
                aesthetic (mono, $ prompt, scanlines) sets it apart from
                the SaaS app tiles. Download count live-fetched via shields.io. -->
           <a href="https://pypi.org/project/currency-symbols/" target="_blank" rel="noopener"
-             class="bento-tile bento-package" aria-label="currency-symbols on PyPI — live monthly downloads">
+             class="bento-tile bento-package" aria-label="currency-symbols on PyPI — live monthly downloads"
+             style="<%= currency_pos %>">
             <div class="term-chrome">
               <span class="term-lights"><span></span><span></span><span></span></span>
               <span class="term-title">pypi.org / currency-symbols</span>
@@ -1168,8 +1198,8 @@
         <% end %>
       <% end %>
 
-      <!-- Archive footer strip — full width row at the bottom of the bento. -->
-      <a href="#shipping" class="bento-tile bento-closed">
+      <!-- Archive footer strip — hand-placed at the bottom-left. -->
+      <a href="#shipping" class="bento-tile bento-closed" style="<%= closed_pos %>">
         <span class="bento-closed-l">
           <span class="bento-closed-num"><%= closed_apps.length %></span>
           <span class="bento-closed-label">Retired apps · still part of the journey</span>
@@ -1533,14 +1563,39 @@
       }, downloadEls[slug]);
     });
 
-    // ── Bento mouse-follow spotlight ──────────────────────────────────
+    // ── Bento mouse-follow spotlight + scatter parallax ───────────────
     (function () {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Spotlight (per-tile)
       document.querySelectorAll('.bento-tile').forEach(function (tile) {
         tile.addEventListener('mousemove', function (e) {
           var r = tile.getBoundingClientRect();
           tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
           tile.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
+
+      // Parallax (whole hero) — only on the desktop scatter layout.
+      var wrap  = document.querySelector('.bento-grid');
+      var cards = document.querySelectorAll('.bento-grid > .bento-tile');
+      if (!wrap || !cards.length) return;
+      if (window.matchMedia('(max-width: 1023px)').matches) return;  // mobile = stacked, no parallax
+
+      wrap.addEventListener('mousemove', function (e) {
+        var r = wrap.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        cards.forEach(function (card, i) {
+          var depth = 1 + (i % 3) * 0.4;        // staggered depths feel layered
+          card.style.setProperty('--tx', (-px * depth * 7).toFixed(2) + 'px');
+          card.style.setProperty('--ty', (-py * depth * 7).toFixed(2) + 'px');
+        });
+      });
+      wrap.addEventListener('mouseleave', function () {
+        cards.forEach(function (card) {
+          card.style.setProperty('--tx', '0px');
+          card.style.setProperty('--ty', '0px');
         });
       });
     })();
