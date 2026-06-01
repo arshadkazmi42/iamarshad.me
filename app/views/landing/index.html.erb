@@ -1864,28 +1864,6 @@
     </div>
   </div>
 
-  <!-- ───────────────────── MARQUEE STATS ────────────────────── -->
-  <!-- All numbers fetched live from GitHub at page load (see <script> at bottom). -->
-  <!-- App count is auto-derived from the `shipping` array so it updates with the data. -->
-  <div class="marquee-wrap">
-    <div class="marquee">
-      <%
-        marquee_items = [
-          { num_html: live_apps.length.to_s,                                                  label: "apps live in production" },
-          { num_html: '<span data-gh-stat="public_repos">—</span>',                           label: "public repos on GitHub" },
-          { num_html: '<span data-gh-stat="followers">—</span>',                              label: "GitHub followers" },
-          { num_html: '<span data-gh-stars-of="arshadkazmi42/first-issues">—</span>',         label: "stars on first-issues" },
-          { num_html: bounty.length.to_s,                                                     label: "bug bounty platforms" },
-          { num_html: "Berlin 🇩🇪",                                                            label: "is where I build" },
-        ]
-      %>
-      <% (marquee_items + marquee_items).each_with_index do |item, i| %>
-        <div class="marquee-item"><span class="num"><%= item[:num_html].html_safe %></span> <%= item[:label] %></div>
-        <% unless i == (marquee_items.length * 2) - 1 %><span class="marquee-dot"></span><% end %>
-      <% end %>
-    </div>
-  </div>
-
   <!-- ─────────────────────── NOW (cinematic) ──────────────────── -->
   <section id="now" class="section now reveal">
     <div class="section-label">$ what i'm doing today</div>
