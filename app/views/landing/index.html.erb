@@ -1210,22 +1210,22 @@
     min-height: 0;                          /* override the legacy 188px min */
     justify-content: flex-start;
   }
-  .ship-grid > .ship-card .ship-card-blurb {
+  .ship-grid > .ship-card .ship-card-snippet {
     margin-top: auto;                       /* push to bottom of the card */
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    display: -webkit-box;
-    overflow: hidden;
   }
 
-  /* 1×1 small tile: drop the blurb, shrink name+tag */
-  .ship-card.span-small .ship-card-blurb { display: none; }
-  .ship-card.span-small .ship-card-name  { font-size: 18px; }
-  .ship-card.span-small .ship-card-tag   { font-size: 10px; }
+  /* 1×1 small tile: drop the snippet, shrink everything */
+  .ship-card.span-small .ship-card-snippet { display: none; }
+  .ship-card.span-small .ship-card-name    { font-size: 15px; }
+  .ship-card.span-small .ship-card-tag     { font-size: 9px; }
+  .ship-card.span-small .ship-card-icon    { width: 38px; height: 38px; }
+  .ship-card.span-small .ship-card-icon svg { width: 18px; height: 18px; }
 
-  /* 1×2 tall tile: more vertical room → show fuller blurb */
-  .ship-card.span-tall .ship-card-name   { font-size: 22px; }
-  .ship-card.span-tall .ship-card-blurb  { -webkit-line-clamp: 6; }
+  /* 2×1 wide tile: show only the first 2 snippet lines (height ≈ 160px) */
+  .ship-card.span-wide .ship-card-snippet .line:nth-child(n+3) { display: none; }
+
+  /* 1×2 tall tile: full snippet visible (height ≈ 332px) */
+  .ship-card.span-tall .ship-card-name   { font-size: 19px; }
 
   @media (max-width: 1023px) {
     .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 158px; }
@@ -1275,36 +1275,24 @@
   .ship-card:hover::before { opacity: 0.22; transform: scale(1.15); }
   .ship-card:hover::after { opacity: 0.85; }
 
-  .ship-card-top {
+  /* Card header: brand-color icon tile + name/tag stack + arrow */
+  .ship-card-head {
     position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px;
+    display: flex; align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
   }
-  .ship-card .badge-live,
-  .ship-card .badge-closed {
-    font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 999px;
-    display: inline-flex; align-items: center; gap: 5px;
+  .ship-card-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(140deg, var(--pc), color-mix(in srgb, var(--pc) 55%, #000));
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow: 0 6px 16px -4px color-mix(in srgb, var(--pc) 60%, transparent);
+    flex-shrink: 0;
   }
-  .ship-card .badge-live {
-    color: var(--green);
-    background: rgba(52, 211, 153, 0.08);
-    border: 1px solid rgba(52, 211, 153, 0.2);
-  }
-  .ship-card .badge-closed {
-    color: rgba(235, 231, 245, 0.5);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .ship-card .badge-live .ld {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 7px var(--green);
-    animation: pulseDot 2s infinite;
-  }
-  .ship-card .badge-closed .ld {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: rgba(235, 231, 245, 0.4);
-  }
+  .ship-card-icon svg { width: 22px; height: 22px; }
+  .ship-card-meta { flex: 1; min-width: 0; }
 
   /* Retired-apps inline strip below the bento */
   .ship-archive {
@@ -1343,43 +1331,61 @@
   .ship-card.is-closed:hover::before { opacity: 0.08; transform: none; }
   .ship-card.is-closed::after { opacity: 0.15; }
   .ship-card.is-closed:hover::after { opacity: 0.15; }
-  /* Hide the arrow on closed cards — no destination */
-  .ship-card.is-closed .ship-arrow { display: none; }
-  .ship-card .ship-arrow {
+  .ship-card-arrow {
     width: 24px; height: 24px; border-radius: 50%;
     display: grid; place-items: center;
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--line);
     color: var(--muted);
     transition: all 0.2s;
+    flex-shrink: 0;
   }
-  .ship-card:hover .ship-arrow {
+  .ship-card:hover .ship-card-arrow {
     background: var(--pc); border-color: transparent;
     color: #0a0710; transform: translate(2px, -2px);
   }
-  .ship-card .ship-arrow svg { width: 11px; height: 11px; }
+  .ship-card-arrow svg { width: 11px; height: 11px; }
 
   .ship-card-name {
-    position: relative; z-index: 1;
-    font-size: 22px; font-weight: 800; color: var(--text);
-    letter-spacing: -0.025em; line-height: 1;
-    margin-bottom: 4px;
+    font-size: 17px; font-weight: 800; color: var(--text);
+    letter-spacing: -0.022em; line-height: 1.1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 3px;
   }
-  .ship-card-name .tld {
-    color: var(--muted); font-weight: 500;
-  }
+  .ship-card-name .tld { color: var(--muted); font-weight: 500; }
   .ship-card-tag {
-    position: relative; z-index: 1;
-    display: inline-block; margin-bottom: 10px;
-    font-size: 10px; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase;
+    font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--pc);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .ship-card-blurb {
+
+  /* Mock-terminal snippet block — each app's `snippet` data renders as a
+     small monospace box inside the card. Adds the per-card visual variety
+     the Dribbble references have (each card shows actual product activity,
+     not just a description). */
+  .ship-card-snippet {
     position: relative; z-index: 1;
-    font-size: 12.5px; color: var(--muted); line-height: 1.55;
-    flex: 1;
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px; line-height: 1.6;
+    color: var(--muted);
+    overflow: hidden;
   }
+  .ship-card-snippet .line {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ship-card-snippet .s-prompt   { color: var(--pc); }
+  .ship-card-snippet .s-out      { color: rgba(235, 231, 245, 0.58); }
+  .ship-card-snippet .s-warn     { color: #f59e0b; }
+  .ship-card-snippet .s-err      { color: #ff7c8a; }
+  .ship-card-snippet .s-ok,
+  .ship-card-snippet .s-success  { color: var(--green); }
+  .ship-card-snippet .s-info     { color: var(--glow1); }
+  .ship-card-snippet .s-dim      { color: rgba(235, 231, 245, 0.35); }
 
   @media (max-width: 540px) {
     .ship-grid { grid-template-columns: 1fr; }
@@ -1475,10 +1481,12 @@
     margin-top: auto;
   }
 
-  /* 1×1 small tile: drop the blurb */
-  .oss-card.span-small .oss-card-blurb { display: none; }
-  .oss-card.span-small .oss-card-name  { font-size: 14px; }
-  .oss-card.span-small .oss-card-lang-pill { font-size: 9px; padding: 2px 7px; }
+  /* 1×1 small tile: drop the blurb, shrink everything */
+  .oss-card.span-small .oss-card-blurb  { display: none; }
+  .oss-card.span-small .oss-card-name   { font-size: 14px; }
+  .oss-card.span-small .oss-card-tag    { font-size: 9px; }
+  .oss-card.span-small .oss-card-icon   { width: 36px; height: 36px; }
+  .oss-card.span-small .oss-card-icon svg { width: 16px; height: 16px; }
 
   /* 1×2 tall tile: show more lines of blurb */
   .oss-card.span-tall .oss-card-name  { font-size: 18px; }
@@ -1532,37 +1540,46 @@
   .oss-card:hover::before { opacity: 0.18; transform: scale(1.15); }
   .oss-card:hover::after { opacity: 0.75; }
 
-  .oss-card-top {
+  /* OSS header: lang-color icon tile + name/lang stack + stars (top-right) */
+  .oss-card-head {
     position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; margin-bottom: 8px;
+    display: flex; align-items: center;
+    gap: 12px; margin-bottom: 10px;
   }
-  .oss-card-lang-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px 3px 8px;
-    border-radius: 999px;
+  .oss-card-icon {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    background: linear-gradient(140deg, var(--lc), color-mix(in srgb, var(--lc) 55%, #000));
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow: 0 6px 14px -4px color-mix(in srgb, var(--lc) 60%, transparent);
+    flex-shrink: 0;
+  }
+  .oss-card-icon svg { width: 20px; height: 20px; }
+  .oss-card-meta { flex: 1; min-width: 0; }
+  .oss-card-name {
+    font-size: 16px; font-weight: 800; color: var(--text);
+    letter-spacing: -0.02em; line-height: 1.1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 2px;
+  }
+  .oss-card-tag {
+    font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--lc);
-    background: color-mix(in srgb, var(--lc) 10%, transparent);
-    border: 1px solid color-mix(in srgb, var(--lc) 25%, transparent);
-  }
-  .oss-card-lang-pill .swatch {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--lc);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .oss-card-stars {
     flex-shrink: 0;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 11px; font-weight: 700; color: var(--glow4);
     display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(252, 211, 77, 0.08);
+    border: 1px solid rgba(252, 211, 77, 0.18);
+    padding: 3px 8px; border-radius: 999px;
   }
   .oss-card-stars svg { width: 11px; height: 11px; }
-  .oss-card-name {
-    position: relative; z-index: 1;
-    font-size: 16px; font-weight: 800; color: var(--text);
-    letter-spacing: -0.018em; line-height: 1.15;
-    margin-bottom: 4px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
+
   .oss-card-blurb {
     position: relative; z-index: 1;
     font-size: 12px; color: var(--muted); line-height: 1.5;
@@ -1914,15 +1931,27 @@
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
            class="ship-card span-<%= app[:span] || 'small' %>"
            style="--pc: <%= app[:color] %>;">
-          <div class="ship-card-top">
-            <span class="badge-live"><span class="ld"></span> Live</span>
-            <span class="ship-arrow">
+          <div class="ship-card-head">
+            <span class="ship-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="<%= app[:icon] %>"/>
+              </svg>
+            </span>
+            <div class="ship-card-meta">
+              <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+              <div class="ship-card-tag"><%= app[:tag] %></div>
+            </div>
+            <span class="ship-card-arrow" aria-hidden="true">
               <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
             </span>
           </div>
-          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="ship-card-tag"><%= app[:tag] %></div>
-          <p class="ship-card-blurb"><%= app[:blurb] %></p>
+          <% if app[:snippet]&.any? %>
+            <div class="ship-card-snippet">
+              <% app[:snippet].each do |line| %>
+                <div class="line s-<%= line[:s] %>"><%= line[:t] %></div>
+              <% end %>
+            </div>
+          <% end %>
         </a>
       <% end %>
     </div>
@@ -1975,16 +2004,21 @@
         <% link = repo[:external_url] || "https://github.com/#{repo[:repo]}" %>
         <a href="<%= link %>" target="_blank" rel="noopener"
            class="oss-card span-<%= repo[:span] || 'small' %>" style="--lc: <%= repo[:lang_color] %>;">
-          <div class="oss-card-top">
-            <span class="oss-card-lang-pill">
-              <span class="swatch"></span><%= repo[:lang] %>
+          <div class="oss-card-head">
+            <span class="oss-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3M5.625 4.5h12.75c1.035 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V6.375c0-1.035.84-1.875 1.875-1.875Z"/>
+              </svg>
             </span>
+            <div class="oss-card-meta">
+              <div class="oss-card-name"><%= repo[:name] %></div>
+              <div class="oss-card-tag"><%= repo[:lang] %></div>
+            </div>
             <span class="oss-card-stars" data-gh-stars-of="<%= repo[:repo] %>">
               <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
               <span>—</span>
             </span>
           </div>
-          <div class="oss-card-name"><%= repo[:name] %></div>
           <p class="oss-card-blurb"><%= repo[:blurb] %></p>
           <% if repo[:pypi] || repo[:npm] %>
             <% registry = repo[:pypi] ? 'pypi' : 'npm' %>
