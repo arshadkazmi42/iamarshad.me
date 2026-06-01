@@ -122,7 +122,7 @@
   bounty = [
     {
       name: "HackerOne", url: "https://hackerone.com/codermak",
-      color: "#494649", accent: "#ffffff",
+      color: "#494649", accent: "#494649",
       svg: 'M7.207 0c-.4836 0-.8774.1018-1.1823.3002-.3044.2003-.4592.4627-.4592.7798v21.809c0 .2766.1581.5277.4752.7609.315.2335.7031.3501 1.1664.3501.4427 0 .8306-.1166 1.1678-.3501.3352-.231.5058-.4843.5058-.761V1.0815c0-.319-.1623-.5769-.4893-.7813C8.0644.1018 7.6702 0 7.207 0zm9.5234 8.662c-.4836 0-.8717.0981-1.1683.3007l-4.439 2.7822c-.1988.1861-.2841.4687-.2473.855.0342.3826.2108.747.5238 1.0907.3145.346.6662.5626 1.0684.6547.3963.0899.6973.041.8962-.143l1.7551-1.0951v9.7817c0 .2767.1522.5278.4607.761.3007.2335.6873.3501 1.1504.3501.463 0 .863-.1166 1.1983-.3501.3371-.2332.5058-.4843.5058-.761V9.7381c0-.3193-.165-.577-.4898-.7754-.3252-.2026-.7288-.3007-1.2143-.3007z'
     },
     {
@@ -1211,29 +1211,33 @@
     min-height: 0;                          /* override the legacy 188px min */
     justify-content: flex-start;
   }
-  /* Snippet block stretches to fill the cell — its visible lines sit at
-     the top of the block, the rest reads as terminal whitespace. Without
-     this, tall cards have a huge gap between header and snippet. */
-  .ship-grid > .ship-card .ship-card-snippet {
-    flex: 1 1 auto;
-    min-height: 0;
+  /* The blurb fills remaining card height; CTA pinned bottom by margin-top:auto */
+  .ship-grid > .ship-card .ship-card-blurb { flex: 1 1 auto; min-height: 0; }
+
+  /* Wide card (2×1): horizontal split — icon left column, content right.
+     Reads as a real "feature highlight" row rather than a stacked tile. */
+  .ship-card.span-wide {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    column-gap: 18px;
+    align-items: start;
   }
+  .ship-card.span-wide .ship-card-icon { grid-row: span 2; align-self: start; margin-bottom: 0; }
+  .ship-card.span-wide .ship-card-name { font-size: 21px; }
+  .ship-card.span-wide .ship-card-blurb { -webkit-line-clamp: 2; }
+  .ship-card.span-wide .ship-card-cta  { grid-column: 2 / -1; }
 
-  /* 1×1 small tile: no snippet → center the header vertically so it
-     doesn't float at the top of the card with empty space below. */
-  .ship-card.span-small                    { justify-content: center; }
-  .ship-card.span-small .ship-card-snippet { display: none; }
-  .ship-card.span-small .ship-card-name    { font-size: 15px; }
-  .ship-card.span-small .ship-card-tag     { font-size: 9px; }
-  .ship-card.span-small .ship-card-icon    { width: 38px; height: 38px; }
-  .ship-card.span-small .ship-card-icon svg { width: 18px; height: 18px; }
-  .ship-card.span-small .ship-card-head    { margin-bottom: 0; }
+  /* Tall card (1×2): bigger heading + more blurb lines */
+  .ship-card.span-tall .ship-card-name  { font-size: 22px; }
+  .ship-card.span-tall .ship-card-blurb { -webkit-line-clamp: 6; }
 
-  /* 2×1 wide tile: show only the first 2 snippet lines (height ≈ 160px) */
-  .ship-card.span-wide .ship-card-snippet .line:nth-child(n+3) { display: none; }
-
-  /* 1×2 tall tile: full snippet visible (height ≈ 332px) */
-  .ship-card.span-tall .ship-card-name   { font-size: 19px; }
+  /* Small card (1×1): compact — slightly smaller everything, 2-line blurb */
+  .ship-card.span-small .ship-card-icon     { width: 48px; height: 48px; margin-bottom: 12px; }
+  .ship-card.span-small .ship-card-icon svg { width: 22px; height: 22px; }
+  .ship-card.span-small .ship-card-name     { font-size: 15px; }
+  .ship-card.span-small .ship-card-tag      { font-size: 9px; margin-bottom: 6px; }
+  .ship-card.span-small .ship-card-blurb    { -webkit-line-clamp: 2; font-size: 11.5px; }
+  .ship-card.span-small .ship-card-cta      { display: none; }
 
   @media (max-width: 900px) {
     .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
@@ -1271,24 +1275,20 @@
                 0 18px 36px -14px rgba(26, 20, 24, 0.15);
   }
 
-  /* Card header: brand-color icon tile + name/tag stack + arrow */
-  .ship-card-head {
-    position: relative; z-index: 1;
-    display: flex; align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
+  /* Stacked card layout — icon, then name + tag header, then description,
+     then "Visit →" CTA pinned at the bottom of the card. The icon and the
+     small brand-coloured CTA are the only colour elements on each card. */
   .ship-card-icon {
-    width: 46px; height: 46px;
-    border-radius: 12px;
+    width: 56px; height: 56px;
+    border-radius: 14px;
     background: linear-gradient(140deg, var(--pc), color-mix(in srgb, var(--pc) 55%, #000));
     display: grid; place-items: center;
     color: #fff;
-    box-shadow: 0 6px 16px -4px color-mix(in srgb, var(--pc) 60%, transparent);
+    box-shadow: 0 8px 18px -6px color-mix(in srgb, var(--pc) 50%, transparent);
     flex-shrink: 0;
+    margin-bottom: 14px;
   }
-  .ship-card-icon svg { width: 22px; height: 22px; }
-  .ship-card-meta { flex: 1; min-width: 0; }
+  .ship-card-icon svg { width: 26px; height: 26px; }
 
   /* Retired-apps inline strip below the bento */
   .ship-archive {
@@ -1327,61 +1327,39 @@
   .ship-card.is-closed:hover::before { opacity: 0.08; transform: none; }
   .ship-card.is-closed::after { opacity: 0.15; }
   .ship-card.is-closed:hover::after { opacity: 0.15; }
-  .ship-card-arrow {
-    width: 24px; height: 24px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--line);
-    color: var(--muted);
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .ship-card:hover .ship-card-arrow {
-    background: var(--pc); border-color: transparent;
-    color: #0a0710; transform: translate(2px, -2px);
-  }
-  .ship-card-arrow svg { width: 11px; height: 11px; }
-
   .ship-card-name {
-    font-size: 17px; font-weight: 800; color: var(--text);
-    letter-spacing: -0.022em; line-height: 1.1;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    margin-bottom: 3px;
+    font-size: 18px; font-weight: 800; color: var(--text);
+    letter-spacing: -0.025em; line-height: 1.1;
+    margin-bottom: 4px;
   }
-  .ship-card-name .tld { color: var(--muted); font-weight: 500; }
+  .ship-card-name .tld { color: rgba(26, 20, 24, 0.42); font-weight: 500; }
   .ship-card-tag {
-    font-size: 9.5px; font-weight: 800;
-    letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.14em; text-transform: uppercase;
     color: rgba(26, 20, 24, 0.45);
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 10px;
   }
-
-  /* Mock-terminal snippet block — each app's `snippet` data renders as a
-     small monospace box inside the card. Adds the per-card visual variety
-     the Dribbble references have (each card shows actual product activity,
-     not just a description). */
-  .ship-card-snippet {
-    position: relative; z-index: 1;
-    background: rgba(26, 20, 24, 0.05);
-    border: 1px solid rgba(26, 20, 24, 0.07);
-    border-radius: 8px;
-    padding: 9px 11px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 10.5px; line-height: 1.6;
-    color: var(--muted);
+  .ship-card-blurb {
+    font-size: 13px;
+    color: rgba(26, 20, 24, 0.66);
+    line-height: 1.55;
+    margin-bottom: 14px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
     overflow: hidden;
   }
-  .ship-card-snippet .line {
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  .ship-card-cta {
+    margin-top: auto;
+    font-size: 11.5px; font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--pc);
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.2s;
+    align-self: flex-start;
   }
-  .ship-card-snippet .s-prompt   { color: rgba(26, 20, 24, 0.78); font-weight: 600; }
-  .ship-card-snippet .s-out      { color: rgba(26, 20, 24, 0.62); }
-  .ship-card-snippet .s-warn     { color: #f59e0b; }
-  .ship-card-snippet .s-err      { color: #ff7c8a; }
-  .ship-card-snippet .s-ok,
-  .ship-card-snippet .s-success  { color: var(--green); }
-  .ship-card-snippet .s-info     { color: var(--glow1); }
-  .ship-card-snippet .s-dim      { color: rgba(26, 20, 24, 0.36); }
+  .ship-card:hover .ship-card-cta { gap: 9px; }
+  .ship-card-cta svg { width: 12px; height: 12px; }
 
   @media (max-width: 540px) {
     .ship-grid { grid-template-columns: 1fr; }
@@ -1917,27 +1895,18 @@
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
            class="ship-card span-<%= app[:span] || 'small' %>"
            style="--pc: <%= app[:color] %>;">
-          <div class="ship-card-head">
-            <span class="ship-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="<%= app[:icon] %>"/>
-              </svg>
-            </span>
-            <div class="ship-card-meta">
-              <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-              <div class="ship-card-tag"><%= app[:tag] %></div>
-            </div>
-            <span class="ship-card-arrow" aria-hidden="true">
-              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-            </span>
-          </div>
-          <% if app[:snippet]&.any? %>
-            <div class="ship-card-snippet">
-              <% app[:snippet].each do |line| %>
-                <div class="line s-<%= line[:s] %>"><%= line[:t] %></div>
-              <% end %>
-            </div>
-          <% end %>
+          <span class="ship-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="<%= app[:icon] %>"/>
+            </svg>
+          </span>
+          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+          <div class="ship-card-tag"><%= app[:tag] %></div>
+          <p class="ship-card-blurb"><%= app[:blurb] %></p>
+          <span class="ship-card-cta">
+            Visit
+            <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
         </a>
       <% end %>
     </div>
