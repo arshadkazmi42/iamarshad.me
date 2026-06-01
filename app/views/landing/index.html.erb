@@ -1210,16 +1210,23 @@
     min-height: 0;                          /* override the legacy 188px min */
     justify-content: flex-start;
   }
+  /* Snippet block stretches to fill the cell — its visible lines sit at
+     the top of the block, the rest reads as terminal whitespace. Without
+     this, tall cards have a huge gap between header and snippet. */
   .ship-grid > .ship-card .ship-card-snippet {
-    margin-top: auto;                       /* push to bottom of the card */
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
-  /* 1×1 small tile: drop the snippet, shrink everything */
+  /* 1×1 small tile: no snippet → center the header vertically so it
+     doesn't float at the top of the card with empty space below. */
+  .ship-card.span-small                    { justify-content: center; }
   .ship-card.span-small .ship-card-snippet { display: none; }
   .ship-card.span-small .ship-card-name    { font-size: 15px; }
   .ship-card.span-small .ship-card-tag     { font-size: 9px; }
   .ship-card.span-small .ship-card-icon    { width: 38px; height: 38px; }
   .ship-card.span-small .ship-card-icon svg { width: 18px; height: 18px; }
+  .ship-card.span-small .ship-card-head    { margin-bottom: 0; }
 
   /* 2×1 wide tile: show only the first 2 snippet lines (height ≈ 160px) */
   .ship-card.span-wide .ship-card-snippet .line:nth-child(n+3) { display: none; }
@@ -1243,12 +1250,12 @@
     --pc: var(--text);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 18px 18px 16px;
+    padding: 16px;
     border-radius: 16px;
     background: var(--surface); border: 1px solid var(--line);
     transition: all 0.25s ease;
     text-decoration: none; color: inherit;
-    min-height: 188px;
+    min-height: 0;
   }
   /* ambient orb — fades in on hover with the brand color */
   .ship-card::before {
