@@ -38,3 +38,4 @@
 !/app/assets/builds/.keep
 
 .env
+.claude/settings.local.json

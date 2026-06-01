@@ -18,6 +18,7 @@
     # instead of just a colored panel with a name.
     { name: "iScan",      tld: ".today", url: "https://iscan.today",      tag: "Secret scanner",    color: "#7c5cff",
       span: "wide",  # 2-cols wide in the bento
+      chip: "Scanning…",
       icon: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
       snippet: [
         { s: :prompt, t: "$ iscan --org acme" },
@@ -30,6 +31,7 @@
       blurb: "Catch leaked secrets across GitHub, GitLab, NPM, Docker Hub and more. Built for bug bounty hunters.", status: :live },
     { name: "iSpy",       tld: ".today", url: "https://ispy.today",       tag: "Real-time monitor", color: "#22d3ee",
       span: "small",  # 1x1
+      chip: "Live feed",
       icon: 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
       snippet: [
         { s: :ok,   t: "● LIVE · watching" },
@@ -39,6 +41,7 @@
       blurb: "Real-time GitHub leak monitor. Pings me the moment a token is published in public.",                  status: :live },
     { name: "iSsl",       tld: ".today", url: "https://issl.today",       tag: "Domain alerts",     color: "#fcd34d",
       span: "small",  # 1x1
+      chip: "Verified",
       icon: 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
       snippet: [
         { s: :ok,   t: "✓ 47 domains monitored" },
@@ -48,6 +51,7 @@
       blurb: "SSL expiry + subdomain takeover alerts on autopilot, straight into Slack and Discord.",                status: :live },
     { name: "iLink",      tld: ".today", url: "https://ilink.today",      tag: "Encrypted notes",   color: "#34d399",
       span: "wide",  # 2x1
+      chip: "Encrypting…",
       icon: 'M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244',
       snippet: [
         { s: :ok,   t: "→ ilink.today/x4f9z" },
@@ -57,6 +61,7 @@
       blurb: "E2E-encrypted self-destruct links. The Privnote replacement I actually trust to read my own code.",   status: :live },
     { name: "GhRev",      tld: ".com",   url: "https://ghrev.com",        tag: "AI PR copilot",     color: "#5b8def",
       span: "tall",  # 1x2 — column on the right, spans 2 rows
+      chip: "Reviewing PR…",
       icon: 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
       snippet: [
         { s: :prompt, t: "PR #1234  +18 -7" },
@@ -66,6 +71,7 @@
       blurb: "Chrome extension that gives your AI CLI a seat in every GitHub PR — reviews, diagrams, chat.",         status: :live },
     { name: "iBlockBots", tld: ".today", url: "https://iblockbots.today", tag: "Bot blocker",       color: "#fb7185",
       span: "wide",  # 2x1
+      chip: "Blocking bots",
       icon: 'M9.75 9.75 14.25 14.25m0-4.5L9.75 14.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
       snippet: [
         { s: :warn, t: "⊘ 1,247 bots blocked" },
@@ -75,6 +81,7 @@
       blurb: "Auto-detects and blocks AI reply-farming bots on X/Twitter, entirely in your browser.",                status: :live },
     { name: "iWatcher",   tld: ".watch", url: "https://iwatcher.watch",   tag: "Token verifier",    color: "#14b8a6",
       span: "wide",  # 2x1
+      chip: "Verifying token",
       icon: 'M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z',
       snippet: [
         { s: :prompt, t: "$ iwatcher GHP_****" },
@@ -1211,43 +1218,42 @@
     min-height: 0;                          /* override the legacy 188px min */
     justify-content: flex-start;
   }
-  /* The blurb fills remaining card height; CTA pinned bottom by margin-top:auto */
-  .ship-grid > .ship-card .ship-card-blurb { flex: 1 1 auto; min-height: 0; }
-
-  /* Wide card (2×1): horizontal split — icon left, content right. Uses
-     `grid-template-areas` so every piece pins to its named cell. With
-     plain `grid-row: span 2` on the icon, name+tag landed in col 2 but
-     blurb+cta leaked into col 1 row 3 — that's the "everything left-
-     aligned" the user saw on the wide cards. */
+  /* Wide card (2×1): preview on the LEFT, content on the RIGHT (the
+     Pactum reference's horizontal cards). Preview keeps its dotted bg,
+     content stays in the right column. */
   .ship-card.span-wide {
     display: grid;
-    grid-template-columns: 64px 1fr;
-    grid-template-rows: auto auto 1fr auto;
-    grid-template-areas:
-      "icon name"
-      "icon tag"
-      "icon blurb"
-      "icon cta";
-    column-gap: 18px;
-    row-gap: 0;
+    grid-template-columns: minmax(180px, 1fr) 1.25fr;
+    grid-template-rows: 1fr;
   }
-  .ship-card.span-wide .ship-card-icon  { grid-area: icon;  margin-bottom: 0; align-self: start; }
-  .ship-card.span-wide .ship-card-name  { grid-area: name;  font-size: 21px; margin-bottom: 4px; }
-  .ship-card.span-wide .ship-card-tag   { grid-area: tag;   margin-bottom: 10px; }
-  .ship-card.span-wide .ship-card-blurb { grid-area: blurb; -webkit-line-clamp: 2; margin-bottom: 0; }
-  .ship-card.span-wide .ship-card-cta   { grid-area: cta;   margin-top: 10px; }
+  .ship-card.span-wide .ship-card-preview {
+    border-bottom: none;
+    border-right: 1px solid rgba(26, 20, 24, 0.05);
+    min-height: 0;
+  }
+  .ship-card.span-wide .ship-card-content {
+    justify-content: center;
+    padding: 18px 20px;
+  }
+  .ship-card.span-wide .ship-card-name  { font-size: 19px; }
 
-  /* Tall card (1×2): bigger heading + more blurb lines */
-  .ship-card.span-tall .ship-card-name  { font-size: 22px; }
-  .ship-card.span-tall .ship-card-blurb { -webkit-line-clamp: 6; }
+  /* Tall card (1×2): preview zone gets to breathe (extra vertical room
+     for the dotted grid), heading slightly larger, more blurb lines */
+  .ship-card.span-tall .ship-card-preview { padding: 38px 18px; min-height: 150px; }
+  .ship-card.span-tall .ship-card-name    { font-size: 20px; }
+  .ship-card.span-tall .ship-card-blurb   { -webkit-line-clamp: 5; }
 
-  /* Small card (1×1): compact — slightly smaller everything, 2-line blurb */
-  .ship-card.span-small .ship-card-icon     { width: 48px; height: 48px; margin-bottom: 12px; }
-  .ship-card.span-small .ship-card-icon svg { width: 22px; height: 22px; }
-  .ship-card.span-small .ship-card-name     { font-size: 15px; }
-  .ship-card.span-small .ship-card-tag      { font-size: 9px; margin-bottom: 6px; }
-  .ship-card.span-small .ship-card-blurb    { -webkit-line-clamp: 2; font-size: 11.5px; }
-  .ship-card.span-small .ship-card-cta      { display: none; }
+  /* Small card (1×1): tighter preview, smaller heading, 2-line blurb */
+  .ship-card.span-small .ship-card-preview     { padding: 16px 12px; min-height: 70px; }
+  .ship-card.span-small .ship-card-icon        { width: 40px; height: 40px; }
+  .ship-card.span-small .ship-card-icon svg    { width: 20px; height: 20px; }
+  .ship-card.span-small .ship-card-link-dash   { flex: 0 0 16px; }
+  .ship-card.span-small .ship-card-chip        { font-size: 9.5px; padding: 3px 8px 3px 7px; }
+  .ship-card.span-small .ship-card-chip .dot   { width: 5px; height: 5px; }
+  .ship-card.span-small .ship-card-content     { padding: 12px 14px 14px; }
+  .ship-card.span-small .ship-card-name        { font-size: 14.5px; margin-bottom: 4px; }
+  .ship-card.span-small .ship-card-blurb       { font-size: 11px; line-height: 1.45; -webkit-line-clamp: 2; margin-bottom: 0; }
+  .ship-card.span-small .ship-card-cta         { display: none; }
 
   @media (max-width: 900px) {
     .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
@@ -1261,11 +1267,14 @@
       grid-column: span 1; grid-row: span 1; min-height: 140px;
     }
   }
+  /* Card layout follows Dribbble 26366165 (Pactum): a tall preview zone
+     at the top (dotted grid bg + icon tile + status chip linked by a
+     dashed connector), then a content zone with the heading + blurb. */
   .ship-card {
     --pc: var(--text);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 18px;
+    padding: 0;
     border-radius: 18px;
     background: #ffffff;
     border: 1px solid rgba(26, 20, 24, 0.06);
@@ -1275,14 +1284,87 @@
     text-decoration: none; color: inherit;
     min-height: 0;
   }
-  /* no brand-colour orb / bottom bar on light theme — the icon tile is
-     the only colour signature per card, matching the SEO-Talent ref. */
   .ship-card::before, .ship-card::after { display: none; }
   .ship-card:hover {
     border-color: rgba(26, 20, 24, 0.12);
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(26, 20, 24, 0.05),
                 0 18px 36px -14px rgba(26, 20, 24, 0.15);
+  }
+
+  /* PREVIEW zone — the dotted-grid "mock UI" area */
+  .ship-card-preview {
+    position: relative;
+    flex: 1 1 auto;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    padding: 22px 18px;
+    min-height: 96px;
+    border-bottom: 1px solid rgba(26, 20, 24, 0.05);
+    /* 14×14px dot grid + a soft brand-tinted gradient backdrop */
+    background:
+      radial-gradient(circle at center,
+        rgba(26, 20, 24, 0.13) 0.7px, transparent 1.4px) 0 0 / 14px 14px,
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--pc) 5%, #fcfcfa) 0%,
+        #ffffff 100%);
+  }
+  /* Radial fade so the dots melt into the card edges */
+  .ship-card-preview::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 65% 70% at center,
+      transparent 0%, #ffffff 95%);
+    pointer-events: none;
+  }
+
+  .ship-card-icon {
+    position: relative; z-index: 1;
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(140deg, var(--pc), color-mix(in srgb, var(--pc) 55%, #000));
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow: 0 8px 18px -6px color-mix(in srgb, var(--pc) 50%, transparent);
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  .ship-card-icon svg { width: 24px; height: 24px; }
+
+  .ship-card-link-dash {
+    position: relative; z-index: 1;
+    flex: 0 0 28px;
+    border-top: 1.5px dashed rgba(26, 20, 24, 0.20);
+    align-self: center;
+  }
+
+  .ship-card-chip {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 11px 5px 9px;
+    background: #ffffff;
+    border: 1px solid rgba(26, 20, 24, 0.08);
+    border-radius: 999px;
+    font-size: 10.5px; font-weight: 600;
+    color: var(--text);
+    box-shadow: 0 4px 12px -4px rgba(26, 20, 24, 0.08);
+    white-space: nowrap;
+  }
+  .ship-card-chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pc);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--pc) 70%, transparent);
+    animation: chipPulse 2s ease-in-out infinite;
+  }
+  @keyframes chipPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.45; }
+  }
+
+  /* CONTENT zone — heading + description (always pinned to the bottom) */
+  .ship-card-content {
+    flex: 0 0 auto;
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column;
   }
 
   /* Stacked card layout — icon, then name + tag header, then description,
@@ -1905,18 +1987,26 @@
         <a href="<%= app[:url] %>" target="_blank" rel="noopener"
            class="ship-card span-<%= app[:span] || 'small' %>"
            style="--pc: <%= app[:color] %>;">
-          <span class="ship-card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="<%= app[:icon] %>"/>
-            </svg>
-          </span>
-          <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
-          <div class="ship-card-tag"><%= app[:tag] %></div>
-          <p class="ship-card-blurb"><%= app[:blurb] %></p>
-          <span class="ship-card-cta">
-            Visit
-            <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
+          <div class="ship-card-preview" aria-hidden="true">
+            <span class="ship-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="<%= app[:icon] %>"/>
+              </svg>
+            </span>
+            <span class="ship-card-link-dash"></span>
+            <span class="ship-card-chip">
+              <span class="dot"></span><%= app[:chip] || app[:tag] %>
+            </span>
+          </div>
+          <div class="ship-card-content">
+            <div class="ship-card-name"><%= app[:name] %><span class="tld"><%= app[:tld] %></span></div>
+            <div class="ship-card-tag"><%= app[:tag] %></div>
+            <p class="ship-card-blurb"><%= app[:blurb] %></p>
+            <span class="ship-card-cta">
+              Visit
+              <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
         </a>
       <% end %>
     </div>
