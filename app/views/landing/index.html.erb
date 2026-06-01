@@ -178,15 +178,11 @@
   code, .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
 
   /* ── Animated background ────────────────────────────────────────────── */
-  .bg-scene { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .orb {
-    position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.14;
-    animation: orbFloat 14s ease-in-out infinite alternate;
-  }
-  .orb-1 { width: 620px; height: 620px; background: var(--glow1); top: -18%; left: -8%; animation-delay: 0s; }
-  .orb-2 { width: 520px; height: 520px; background: var(--glow2); top: 18%; right: -10%; animation-delay: -4s; animation-duration: 17s; }
-  .orb-3 { width: 420px; height: 420px; background: var(--glow3); bottom: 8%; left: 28%; animation-delay: -8s; animation-duration: 15s; }
-  .orb-4 { width: 360px; height: 360px; background: var(--glow4); top: 58%; left: -6%; animation-delay: -2s; animation-duration: 19s; opacity: 0.10; }
+  /* Orbs removed for light theme — the SEO Talent reference has NO
+     ambient colour washes, just clean cream with white cards. */
+  .bg-scene { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; display: none; }
+  .orb { display: none; }
+  .orb-1, .orb-2, .orb-3, .orb-4 { display: none; }
   @keyframes orbFloat {
     0%   { transform: translate(0,0) scale(1); }
     33%  { transform: translate(40px,-30px) scale(1.08); }
@@ -1066,22 +1062,23 @@
     flex: 0 0 320px;
     height: 126px;
     padding: 14px 16px;
-    background: linear-gradient(135deg,
-      color-mix(in srgb, var(--pc) 9%, var(--surface)),
-      var(--surface) 70%);
-    border: 1px solid color-mix(in srgb, var(--pc) 22%, var(--line));
-    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(26, 20, 24, 0.06);
+    box-shadow: 0 1px 2px rgba(26, 20, 24, 0.04),
+                0 6px 18px -12px rgba(26, 20, 24, 0.08);
+    border-radius: 16px;
     display: grid;
     grid-template-columns: 56px 1fr;
     gap: 14px;
     align-items: center;
     text-decoration: none;
-    transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
   }
   .showcase-card:hover {
     transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--pc) 55%, var(--line));
-    box-shadow: 0 14px 30px -10px color-mix(in srgb, var(--pc) 45%, transparent);
+    border-color: rgba(26, 20, 24, 0.12);
+    box-shadow: 0 2px 4px rgba(26, 20, 24, 0.05),
+                0 16px 32px -10px rgba(26, 20, 24, 0.18);
   }
   .showcase-icon {
     width: 56px; height: 56px;
@@ -1106,7 +1103,7 @@
   .showcase-tag {
     font-size: 9.5px; font-weight: 800;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--pc);
+    color: rgba(26, 20, 24, 0.45);
     margin-bottom: 5px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
@@ -1194,12 +1191,14 @@
   .now .desc a { color: var(--text); border-bottom: 1px dashed rgba(255,255,255,0.25); }
   .now .desc a:hover { border-color: var(--text); }
 
-  /* ── SHIPPING: mixed-span bento (Dribbble 23193374 layout) ─────────── */
+  /* ── SHIPPING: mixed-span bento (SEO-Talent style, 3-col so 7 cards
+       = 4 wide + 1 tall + 2 small = 12 cells pack into 4 rows with NO
+       empty cells / staircase). ─────────────────────────────────── */
   .ship-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 160px;
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 170px;
+    gap: 14px;
     grid-auto-flow: dense;
   }
   .ship-card.span-wide  { grid-column: span 2; }
@@ -1236,8 +1235,8 @@
   /* 1×2 tall tile: full snippet visible (height ≈ 332px) */
   .ship-card.span-tall .ship-card-name   { font-size: 19px; }
 
-  @media (max-width: 1023px) {
-    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 158px; }
+  @media (max-width: 900px) {
+    .ship-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
     .ship-card.span-wide  { grid-column: span 2; }
     .ship-card.span-tall  { grid-row: span 1; }
     .ship-card.span-small { grid-column: span 1; }
@@ -1252,37 +1251,25 @@
     --pc: var(--text);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 16px;
-    border-radius: 16px;
-    background: var(--surface); border: 1px solid var(--line);
-    transition: all 0.25s ease;
+    padding: 18px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid rgba(26, 20, 24, 0.06);
+    box-shadow: 0 1px 2px rgba(26, 20, 24, 0.04),
+                0 8px 24px -16px rgba(26, 20, 24, 0.08);
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
     text-decoration: none; color: inherit;
     min-height: 0;
   }
-  /* ambient orb — fades in on hover with the brand color */
-  .ship-card::before {
-    content: ""; position: absolute;
-    top: -40px; right: -40px;
-    width: 140px; height: 140px; border-radius: 50%;
-    background: var(--pc); opacity: 0.08;
-    filter: blur(28px);
-    transition: opacity 0.3s, transform 0.4s;
-    pointer-events: none;
-  }
-  /* thin colored bar along the bottom — the "brand signature" */
-  .ship-card::after {
-    content: ""; position: absolute;
-    left: 0; right: 0; bottom: 0; height: 2px;
-    background: var(--pc); opacity: 0.35;
-    transition: opacity 0.25s;
-  }
+  /* no brand-colour orb / bottom bar on light theme — the icon tile is
+     the only colour signature per card, matching the SEO-Talent ref. */
+  .ship-card::before, .ship-card::after { display: none; }
   .ship-card:hover {
-    border-color: color-mix(in srgb, var(--pc) 30%, var(--line));
+    border-color: rgba(26, 20, 24, 0.12);
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--pc) 35%, transparent);
+    box-shadow: 0 2px 4px rgba(26, 20, 24, 0.05),
+                0 18px 36px -14px rgba(26, 20, 24, 0.15);
   }
-  .ship-card:hover::before { opacity: 0.22; transform: scale(1.15); }
-  .ship-card:hover::after { opacity: 0.85; }
 
   /* Card header: brand-color icon tile + name/tag stack + arrow */
   .ship-card-head {
@@ -1365,7 +1352,7 @@
   .ship-card-tag {
     font-size: 9.5px; font-weight: 800;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--pc);
+    color: rgba(26, 20, 24, 0.45);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
@@ -1387,7 +1374,7 @@
   .ship-card-snippet .line {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .ship-card-snippet .s-prompt   { color: var(--pc); }
+  .ship-card-snippet .s-prompt   { color: rgba(26, 20, 24, 0.78); font-weight: 600; }
   .ship-card-snippet .s-out      { color: rgba(26, 20, 24, 0.62); }
   .ship-card-snippet .s-warn     { color: #f59e0b; }
   .ship-card-snippet .s-err      { color: #ff7c8a; }
@@ -1462,12 +1449,12 @@
   .bcard:hover .pcta { border-color: var(--pca, var(--pc)); }
   .bcard .pcta svg { width: 9px; height: 9px; }
 
-  /* ── OSS: same mixed-span bento as Shipping ────────────────────────── */
+  /* ── OSS: same 3-col bento as Shipping ─────────────────────────────── */
   .oss-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 160px;
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 170px;
+    gap: 14px;
     grid-auto-flow: dense;
   }
   .oss-card.span-wide  { grid-column: span 2; }
@@ -1504,8 +1491,8 @@
   .oss-card.span-tall .oss-card-name  { font-size: 18px; }
   .oss-card.span-tall .oss-card-blurb { -webkit-line-clamp: 6; font-size: 12.5px; }
 
-  @media (max-width: 1023px) {
-    .oss-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+  @media (max-width: 900px) {
+    .oss-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
     .oss-card.span-wide  { grid-column: span 2; }
     .oss-card.span-tall  { grid-row:    span 1; }
     .oss-card.span-small { grid-column: span 1; }
@@ -1520,37 +1507,24 @@
     --lc: var(--text);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 16px 16px 14px;
-    border-radius: 14px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    transition: all 0.25s;
+    padding: 18px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid rgba(26, 20, 24, 0.06);
+    box-shadow: 0 1px 2px rgba(26, 20, 24, 0.04),
+                0 8px 24px -16px rgba(26, 20, 24, 0.08);
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
     min-width: 0;
     text-decoration: none; color: inherit;
-    min-height: 144px;
+    min-height: 0;
   }
-  .oss-card::before {
-    content: ""; position: absolute;
-    top: -36px; right: -36px;
-    width: 120px; height: 120px; border-radius: 50%;
-    background: var(--lc); opacity: 0.07;
-    filter: blur(24px);
-    transition: opacity 0.3s, transform 0.4s;
-    pointer-events: none;
-  }
-  .oss-card::after {
-    content: ""; position: absolute;
-    left: 0; right: 0; bottom: 0; height: 2px;
-    background: var(--lc); opacity: 0.3;
-    transition: opacity 0.25s;
-  }
+  .oss-card::before, .oss-card::after { display: none; }
   .oss-card:hover {
-    border-color: color-mix(in srgb, var(--lc) 35%, var(--line));
+    border-color: rgba(26, 20, 24, 0.12);
     transform: translateY(-2px);
-    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--lc) 30%, transparent);
+    box-shadow: 0 2px 4px rgba(26, 20, 24, 0.05),
+                0 18px 36px -14px rgba(26, 20, 24, 0.15);
   }
-  .oss-card:hover::before { opacity: 0.18; transform: scale(1.15); }
-  .oss-card:hover::after { opacity: 0.75; }
 
   /* OSS header: lang-color icon tile + name/lang stack + stars (top-right) */
   .oss-card-head {
@@ -1578,7 +1552,7 @@
   .oss-card-tag {
     font-size: 9.5px; font-weight: 800;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--lc);
+    color: rgba(26, 20, 24, 0.45);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .oss-card-stars {
