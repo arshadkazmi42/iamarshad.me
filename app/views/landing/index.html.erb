@@ -1026,6 +1026,101 @@
   .social:hover { color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03); transform: translateY(-1px); }
   .social svg { width: 12px; height: 12px; }
 
+  /* ── Auto-moving showcase: horizontal cards of every app + OSS project ─
+     Sits between hero and marquee. The track contains the items twice so
+     `translateX(0)` → `translateX(-50%)` looks like one continuous loop.
+     Animation pauses on hover so the user can read / click a card. */
+  .showcase-wrap {
+    position: relative;
+    overflow: hidden;
+    padding: 18px 0 22px;
+    margin-top: 32px;
+  }
+  .showcase-wrap::before,
+  .showcase-wrap::after {
+    content: ""; position: absolute;
+    top: 0; bottom: 0; width: 96px;
+    z-index: 2; pointer-events: none;
+  }
+  .showcase-wrap::before { left: 0;  background: linear-gradient(to right, var(--bg), transparent); }
+  .showcase-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
+  .showcase-track {
+    display: flex; gap: 14px;
+    width: max-content;
+    animation: showcaseMove 60s linear infinite;
+    padding: 8px 14px;
+  }
+  .showcase-wrap:hover .showcase-track { animation-play-state: paused; }
+  @keyframes showcaseMove {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .showcase-track { animation: none; }
+  }
+
+  .showcase-card {
+    --pc: var(--text);
+    flex: 0 0 320px;
+    height: 126px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg,
+      color-mix(in srgb, var(--pc) 9%, var(--surface)),
+      var(--surface) 70%);
+    border: 1px solid color-mix(in srgb, var(--pc) 22%, var(--line));
+    border-radius: 14px;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+  }
+  .showcase-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--pc) 55%, var(--line));
+    box-shadow: 0 14px 30px -10px color-mix(in srgb, var(--pc) 45%, transparent);
+  }
+  .showcase-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(140deg, var(--pc), color-mix(in srgb, var(--pc) 55%, #000));
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow: 0 6px 14px -3px color-mix(in srgb, var(--pc) 55%, transparent);
+    flex-shrink: 0;
+  }
+  .showcase-icon svg { width: 26px; height: 26px; }
+  .showcase-body { min-width: 0; }
+  .showcase-name {
+    font-size: 15px; font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 3px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .showcase-name .tld { color: var(--muted); font-weight: 500; }
+  .showcase-tag {
+    font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--pc);
+    margin-bottom: 5px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .showcase-blurb {
+    font-size: 11.5px; line-height: 1.45;
+    color: var(--muted);
+    margin: 0;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+  @media (max-width: 540px) {
+    .showcase-card { flex: 0 0 280px; }
+  }
+
   /* ── Marquee stats strip ────────────────────────────────────────────── */
   .marquee-wrap {
     overflow: hidden;
@@ -1720,6 +1815,54 @@
       </a>
     </div>
   </section>
+
+  <!-- ────────── AUTO-MOVING SHOWCASE (apps + open source) ──────────
+       Continuously sliding row of horizontal cards covering every live
+       app and every featured OSS repo. Apps and OSS sections below the
+       marquee remain the detailed views. -->
+  <%
+    # Generic Heroicons "command-line" glyph for OSS rows.
+    oss_icon = 'M6.75 7.5l3 2.25-3 2.25m4.5 0h3M5.625 4.5h12.75c1.035 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V6.375c0-1.035.84-1.875 1.875-1.875Z'
+
+    showcase_items =
+      live_apps.map { |a| {
+        url:   a[:url],
+        color: a[:color],
+        icon:  a[:icon],
+        name:  a[:name],
+        tld:   a[:tld],
+        tag:   "#{a[:tag]} · App",
+        blurb: a[:blurb],
+      } } +
+      oss.map { |r| {
+        url:   r[:external_url] || "https://github.com/#{r[:repo]}",
+        color: r[:lang_color],
+        icon:  oss_icon,
+        name:  r[:name],
+        tld:   '',
+        tag:   "#{r[:lang]} · Open source",
+        blurb: r[:blurb],
+      } }
+  %>
+  <div class="showcase-wrap" aria-label="Showcase of all apps and open-source projects">
+    <div class="showcase-track">
+      <% (showcase_items + showcase_items).each do |item| %>
+        <a href="<%= item[:url] %>" target="_blank" rel="noopener"
+           class="showcase-card" style="--pc: <%= item[:color] %>;">
+          <span class="showcase-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="<%= item[:icon] %>"/>
+            </svg>
+          </span>
+          <div class="showcase-body">
+            <div class="showcase-name"><%= item[:name] %><span class="tld"><%= item[:tld] %></span></div>
+            <div class="showcase-tag"><%= item[:tag] %></div>
+            <p class="showcase-blurb"><%= item[:blurb] %></p>
+          </div>
+        </a>
+      <% end %>
+    </div>
+  </div>
 
   <!-- ───────────────────── MARQUEE STATS ────────────────────── -->
   <!-- All numbers fetched live from GitHub at page load (see <script> at bottom). -->
